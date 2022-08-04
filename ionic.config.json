@@ -1,0 +1,8 @@
+{
+  "name": "SupplyChain",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "3dd7137a"
+}
