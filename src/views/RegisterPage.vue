@@ -6,6 +6,7 @@
           <ion-title size="large">Login</ion-title>
         </ion-toolbar>
       </ion-header> 
+      <form>
       <ion-grid class="container" >
         
         <ion-col>
@@ -26,6 +27,7 @@
           </ion-row>
         </ion-col>
       </ion-grid>
+      </form>
     </ion-content>
   </ion-page>
 </template>

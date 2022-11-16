@@ -57,6 +57,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'ControlPage',
         component: () => import('@/views/Lobby/ControlPage.vue')
+      },
+      {
+        path: 'EventsPage',
+        component: () => import('@/views/Lobby/EventsPage.vue')
       }
     ]
   }

@@ -6,8 +6,8 @@
           <ion-title size="large">Login</ion-title>
         </ion-toolbar>
       </ion-header> 
+      <form>
       <ion-grid class="container" >
-        
         <ion-col>
           <ion-row class="item">
               <h3> Login </h3>
@@ -26,6 +26,7 @@
           </ion-row>
         </ion-col>
       </ion-grid>
+      </form>
     </ion-content>
   </ion-page>
 </template>

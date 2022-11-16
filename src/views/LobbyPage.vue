@@ -17,6 +17,11 @@
             <ion-icon :icon="ellipse" />
             <ion-label>Control</ion-label>
           </ion-tab-button>
+
+          <ion-tab-button tab="tab2" href="/lobby/EventsPage">
+            <ion-icon :icon="star" />
+            <ion-label>Events</ion-label>
+          </ion-tab-button>
         </ion-tab-bar>
       </ion-tabs>
     </ion-page>
@@ -25,7 +30,7 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-  import { ellipse, square, triangle } from 'ionicons/icons';
+  import { ellipse, square, triangle, star } from 'ionicons/icons';
   
   export default defineComponent({
     name: 'LobbyPage',
@@ -35,6 +40,7 @@
         ellipse, 
         square, 
         triangle,
+        star
       }
     }
   });
