@@ -8,23 +8,14 @@
           <ion-label>Game</ion-label>
         </ion-tab-button>
         
-        <ion-tab-button tab="tab3" href="/game/DataPage">
+        <ion-tab-button tab="tab2" href="/game/HistoryPage">
           <ion-icon :icon="square" />
           <ion-label>History</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab2" href="/game/HistoryPage">
+        <ion-tab-button tab="tab3" href="/game/DataPage">
           <ion-icon :icon="ellipse" />
-          <ion-label>Performance</ion-label>
-        </ion-tab-button>
-        
-        <ion-tab-button tab="tab3" href="/game/DataPage">
-          <ion-icon :icon="square" />
           <ion-label>Data</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="tab3" href="/game/DataPage">
-          <ion-icon :icon="square" />
-          <ion-label>Next Period</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

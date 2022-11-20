@@ -205,7 +205,7 @@
     name: "GameList",
     setup() {
       console.log("XDDD")
-      let pageSize = 10
+      let pageSize = 25
 
       const isDisabled = ref(false);
       const toggleInfiniteScroll = () => {
@@ -267,8 +267,8 @@
   }
 </script>
 
-<style>
-.item {
+<style scoped>
+.grid-item {
   display: flex;
   align-items: center;
   justify-content: center;

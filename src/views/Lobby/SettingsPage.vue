@@ -1,82 +1,80 @@
 <template>
-  <ion-page>
+  <MenuWidget/>
+  <ion-page id="main-content" >
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
+        <ion-buttons  slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+        <ion-title>Settings</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Tab 1</ion-title>
+          <ion-title size="large">Settings</ion-title>
         </ion-toolbar>
       </ion-header>
     
-      <ion-grid class="container">
+      <ion-grid>
         <ion-col>
           <ion-row class="griditem">
-            <ion-col>
-              <ion-item>
+            <ion-col size-md="2" >
                 <ion-label position="floating">Max Rounds</ion-label>
+            </ion-col>
+            <ion-col size-md="2" >
                 <ion-input type="number" placeholder="Enter text"></ion-input>
-              </ion-item>
             </ion-col>
             <ion-col>
-              <ion-item>
                 <ion-label position="floating">Show stats to users</ion-label>
                 <ion-checkbox></ion-checkbox>
-              </ion-item>
             </ion-col>
             <ion-col>
-              <ion-item>
                 <ion-label position="floating">Unlimited money</ion-label>
                 <ion-checkbox></ion-checkbox>
-              </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-button @click="setOpen('settings', true)" id="open-modal" expand="block" >User Classes</ion-button>
+              <ion-button id="class" expand="block" >User Classes</ion-button>
             </ion-col>
             <ion-col>
-              <ion-item>
-                <ion-label> </ion-label>
-              </ion-item>
+              <ion-row>
+                <p> User Classes:  </p>
+                <p
+                  v-for="uClass in classes"
+                  :key="uClass"
+                >
+                  {{ uClass.class }}
+                </p>
+              </ion-row>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <ion-row >
             <ion-col>
-              <ion-row>
-                <ion-button @click="setOpen('resourcePrice', true)">Set resource prices</ion-button>
-                <ion-button @click="setOpen('startMoney', true)">Set start money</ion-button>
-                <ion-button @click="setOpen('startMagazine', true)">Set start magazine</ion-button>
-                <ion-button @click="setOpen('transportCost', true)">Set transport cost</ion-button>
+              <ion-row class="row" >
+                <ion-button style="margin: 5px" id="resourcePrice" >Set resource prices</ion-button>
+                <ion-button style="margin: 5px" id="startMoney">Set start money</ion-button>
+                <ion-button style="margin: 5px" id="startMagazine">Set start magazine</ion-button>
+                <ion-button style="margin: 5px" id="transportCost">Set transport cost</ion-button>
               </ion-row>
-              <ion-row>
-                <ion-button @click="setOpen('fixOrderCost', true)">Set fix order cost</ion-button>
-                <ion-button @click="setOpen('backOrderCost', true)">Set back order cost</ion-button>
-                <ion-button @click="setOpen('additionalCost', true)">Set additional cost</ion-button>
+              <ion-row class="row" >
+                <ion-button style="margin: 5px" id="fixOrderCost">Set fix order cost</ion-button>
+                <ion-button style="margin: 5px" id="backOrderCost">Set back order cost</ion-button>
+                <ion-button style="margin: 5px" id="additionalCost">Set additional cost</ion-button>
               </ion-row>
-              <ion-row>
-                <ion-button @click="setOpen('startQueue', true)">Set order queue</ion-button>
-                <ion-button @click="setOpen('demand', true)">Set demand style</ion-button>
-                <ion-button @click="setOpen('supply', true)">Set supply style</ion-button>
+              <ion-row class="row" >
+                <ion-button style="margin: 5px" id="startQueue">Set order queue</ion-button>
+                <ion-button style="margin: 5px" id="demand">Set demand style</ion-button>
+                <ion-button style="margin: 5px" id="supply">Set supply style</ion-button>
               </ion-row>
-            </ion-col>
-            <ion-col>
-              <p
-                v-for="uClass in classes"
-                :key="uClass"
-              >
-
-              </p>
             </ion-col>
           </ion-row>
         </ion-col>
 
       </ion-grid>
 
-      <ion-modal :is-open="modalsOpen['settings']">
+      <ion-modal handle-behavior="cycle" ref="classModal"  :can-dismiss="canDismiss" trigger="class">
         <ion-header>
           <ion-toolbar>
             <ion-title>User Classes</ion-title>
@@ -84,7 +82,7 @@
               <ion-button >Add</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button @click="setOpen('settings', false)">Close</ion-button>
+              <ion-button @click="dissmisModal('settings', false)">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -101,12 +99,12 @@
         </ion-content>
       </ion-modal>
 
-      <ion-modal :is-open="modalsOpen['resourcePrice']">
+      <ion-modal handle-behavior="cycle"  ref="resourcePriceModal"  :can-dismiss="canDismiss" trigger="resourcePrice"  >
         <ion-header>
         <ion-toolbar>
             <ion-title>Resource Price</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('resourcePrice', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('resourcePrice', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -118,19 +116,19 @@
             :id="uClass.id" 
             :ref="`resourcePrice${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('resourcePrice', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
         </ion-content>
     </ion-modal>
       
-    <ion-modal :is-open="modalsOpen['startMoney']">
+    <ion-modal handle-behavior="cycle" ref="startMoneyModal"  :can-dismiss="canDismiss" trigger="startMoney">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('startMoney', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('startMoney', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -142,19 +140,19 @@
             :id="uClass.id" 
             :ref="`startMoney${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMoney', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['startMagazine']">
+    <ion-modal handle-behavior="cycle" ref="startMagazineModal"  :can-dismiss="canDismiss" trigger="startMagazine">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('startMagazine', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('startMagazine', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -166,19 +164,19 @@
             :id="uClass.id" 
             :ref="`startMagazine${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMagazine', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['startMagazine']">
+    <ion-modal handle-behavior="cycle"  ref="startMagazineModal"  :can-dismiss="canDismiss" trigger="startMagazine">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('startMagazine', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('startMagazine', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -190,19 +188,19 @@
             :id="uClass.id" 
             :ref="`startMagazine${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMagazine', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['transportCost']">
+    <ion-modal handle-behavior="cycle" ref="transportCostModal" :can-dismiss="canDismiss" trigger="transportCost">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('transportCost', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('transportCost', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -214,19 +212,19 @@
             :id="uClass.id" 
             :ref="`transportCost${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('transportCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['magazineCost']">
+    <ion-modal handle-behavior="cycle" ref="magazineCostModal"  :can-dismiss="canDismiss" trigger="magazineCost">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('magazineCost', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('magazineCost', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -238,19 +236,19 @@
             :id="uClass.id" 
             :ref="`magazineCost${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('magazineCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['fixOrderCost']">
+    <ion-modal handle-behavior="cycle" ref="fixOrderCostModal"  :can-dismiss="canDismiss" trigger="fixOrderCost">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('fixOrderCost', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('fixOrderCost', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -262,19 +260,19 @@
             :id="uClass.id" 
             :ref="`fixOrderCost${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('fixOrderCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['backOrderCost']">
+    <ion-modal handle-behavior="cycle" ref="backOrderCostModal"  :can-dismiss="canDismiss" trigger="backOrderCost">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('backOrderCost', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('backOrderCost', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -286,19 +284,19 @@
             :id="uClass.id" 
             :ref="`backOrderCost${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('backOrderCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['additionalCost']">
+    <ion-modal handle-behavior="cycle" ref="additionalCostModal"  :can-dismiss="canDismiss" trigger="additionalCost">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('additionalCost', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('additionalCost', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -310,19 +308,19 @@
             :id="uClass.id" 
             :ref="`additionalCost${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" type="number" @ionInput="changeValue('additionalCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['startQueue']">
+    <ion-modal handle-behavior="cycle" ref="startQueueModal"  :can-dismiss="canDismiss" trigger="startQueue">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('startQueue', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('startQueue', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -334,40 +332,101 @@
             :id="uClass.id" 
             :ref="`startQueue${uClass.id}`"
         >
-            <ion-label position="fixed">Class name: {{uClass.class}}</ion-label>
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
             <ion-input :value="uClass.class" @ionInput="changeValue('startQueue', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['demand']">
+    <ion-modal handle-behavior="cycle" ref="demandModal"  :can-dismiss="canDismiss" trigger="demand">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Demand Generation</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('demand', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('demand', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <p>demand</p>
-      </ion-content>
+          <ion-item>
+            <ion-select v-model="demand.type" interface="action-sheet" placeholder="Select type">
+                <ion-select-option value="Linear">Linear</ion-select-option>
+                <ion-select-option value="Multiplication">Multiplication</ion-select-option>
+                <ion-select-option value="Exponential">Exponential</ion-select-option>
+                <ion-select-option value="list">List</ion-select-option>
+            </ion-select>
+            </ion-item>
+            <ion-item v-if="demand.type == 'Linear' || demand.type == 'Multiplication' || demand.type == 'Exponential'">
+                <ion-label position="floating">Start</ion-label>
+                <ion-input v-model="demand.start" type="number" ></ion-input>
+            </ion-item>
+            <ion-item v-if="demand.type == 'Linear' || demand.type == 'Multiplication'">
+                <ion-label position="floating">Increase</ion-label>
+                <ion-input v-model="demand.increase" type="number" ></ion-input>
+            </ion-item>
+            <ion-item v-if="demand.type == 'Exponential'">
+                <ion-label position="floating">Power</ion-label>
+                <ion-input v-model="demand.power" type="number" ></ion-input>
+            </ion-item>
+            <ion-item v-if="demand.type == 'Exponential'">
+                <ion-label position="floating">Modulator</ion-label>
+                <ion-input v-model="demand.modulator" type="number" ></ion-input>
+            </ion-item>
+            <ion-item v-if="demand.type == 'List'">
+                <ion-label position="floating">Enter list(separated ",")</ion-label>
+                <ion-input v-model="demand.list"></ion-input>
+            </ion-item>
+        </ion-content>
     </ion-modal>
 
-    <ion-modal :is-open="modalsOpen['supply']">
+    <ion-modal handle-behavior="cycle" ref="supplyModal"  can-dismiss="true"  trigger="supply">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Supply Generation</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="setOpen('supply', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('supply', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <p>supply</p>
-      </ion-content>
+          <ion-item>
+            <ion-select v-model="supply.type" interface="action-sheet" placeholder="Select type">
+                <ion-select-option value="Linear">Linear</ion-select-option>
+                <ion-select-option value="Multiplication">Multiplication</ion-select-option>
+                <ion-select-option value="Exponential">Exponential</ion-select-option>
+                <ion-select-option value="list">List</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item  v-if="supply.type == 'Linear' || supply.type == 'Multiplication' || supply.type == 'Exponential'">
+              <ion-label position="floating">Start</ion-label>
+              <ion-input v-model="supply.start" type="number" ></ion-input>
+          </ion-item>
+          <ion-item  v-if="supply.type == 'Linear' || supply.type == 'Multiplication'">
+              <ion-label position="floating">Increase</ion-label>
+              <ion-input v-model="supply.increase" type="number" ></ion-input>
+          </ion-item>
+          <ion-item  v-if="supply.type == 'Exponential'">
+              <ion-label position="floating">Power</ion-label>
+              <ion-input v-model="supply.power" type="number" ></ion-input>
+          </ion-item>
+          <ion-item  v-if="supply.type == 'Exponential'">
+              <ion-label position="floating">Modulator</ion-label>
+              <ion-input v-model="supply.modulator" type="number" ></ion-input>
+          </ion-item>
+          <ion-item  v-if="supply.type == 'List'">
+              <ion-label position="floating">Enter list(separated ",")</ion-label>
+              <ion-input v-model="supply.list"></ion-input>
+          </ion-item>
+        </ion-content>
     </ion-modal>
+
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button @click="saveSettings()">
+        <ion-icon :icon="save"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
 
     </ion-content>
   </ion-page>
@@ -375,29 +434,17 @@
 
 <script lang="js">
 import { defineComponent } from 'vue';
-import { IonFab, IonFabButton, IonIcon, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonModal, IonGrid, IonRow, IonCol } from '@ionic/vue';
-import { add } from 'ionicons/icons';
+import { IonSelect, IonSelectOption ,IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonInput, IonModal, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import { save } from 'ionicons/icons';
 import ClassValueModalVue from '@/components/ClassValueModal.vue';
+import MenuWidget from '@/components/MenuWidget.vue';
 
 export default  defineComponent({
   name: 'SettingsPage',
-  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonModal, IonGrid, IonRow, IonCol },  
+  props: ['updateSettings'],
+  components: {IonHeader, MenuWidget,  IonSelect, IonSelectOption , IonToolbar, IonTitle, IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonContent, IonPage, IonModal, IonGrid, IonRow, IonCol, IonLabel, IonInput, },  
   data() {
     return {
-      modalsOpen: {
-        "class": false,
-        "resourcePrice": false,
-        "startMoney": false,
-        "startMagazine": false,
-        "transportCost": false,
-        "magazineCost": false,
-        "fixOrderCost": false,
-        "backOrderCost": false,
-        "additionalCost": false,
-        "startQueue": false,
-        "demand": false,
-        "supply": false
-      },
       classes: [{
         id: 1,
         class: 1,
@@ -410,66 +457,90 @@ export default  defineComponent({
         backOrderCost: 1,
         additionalCost: 0,
         startQueue: [1,1],
-        demand: {},
-        supply: {}
       }],
+      demand: {},
+      supply: {},
+      maxRounds: 0,
+      showStats: true,
+      unlimitedMoney: true,
+      canDismiss: true,
       nextClassNum: 2,
       nextClassId: 2
     }
   },
   methods: {
-      setOpen(modal, isOpen) {
-        console.log(modal, isOpen)
-        this.modalsOpen[modal] = isOpen;
-        console.log(this.modalsOpen)
-      },
-      addClass() {
-        this.classes.push({id: this.nextClassId, class: this.nextClassNum})
-        this.nextClassId += 1
-        this.nextClassNum += 1
-      },
-      changeValue(modalName, id, newValue) {
-        console.log(this.$refs[modalName + id][0])
-        this.$refs[modalName + id][0].classList.remove('ion-valid');
-        this.$refs[modalName + id][0].classList.remove('ion-invalid');
-
-        if (newValue === '') return;
-
-        if (modalName == "class") {
-          for (let uClass in this.classes) {
-            if (uClass.id != id && uClass.value == newValue) {
-              this.$refs[modalName + id][0].classList.add('ion-invalid');
-              console.log("invalid")
-            }
-          }
-        }
-        
-        this.classes.find(obj => {
-          return obj.id === id 
-        })[modalName] = newValue
-
-        this.$refs[modalName + id][0].classList.add('ion-valid');
+    saveSettings() {
+      console.log("save")
+    },  
+    dissmisModal(modal, isOpen) {
+      let modalsDismiss = {
+      "class": this.$refs.classModal.$el.dismiss(),
+      "resourcePrice": this.$refs.resourcePriceModal.$el.dismiss(),
+      "startMoney": this.$refs.startMoneyModal.$el.dismiss(),
+      "startMagazine": this.$refs.startMagazineModal.$el.dismiss(),
+      "transportCost": this.$refs.transportCostModal.$el.dismiss(),
+      "magazineCost": this.$refs.magazineCostModal.$el.dismiss(),
+      "fixOrderCost": this.$refs.fixOrderCostModal.$el.dismiss(),
+      "backOrderCost": this.$refs.backOrderCostModal.$el.dismiss(),
+      "additionalCost": this.$refs.additionalCostModal.$el.dismiss(),
+      "startQueue": this.$refs.startQueueModal.$el.dismiss(),
+      "demand": this.$refs.demandModal.$el.dismiss(),
+      "supply": this.$refs.supplyModal.$el.dismiss()
       }
     },
+    addClass() {
+      this.classes.push({id: this.nextClassId, class: this.nextClassNum})
+      this.nextClassId += 1
+      this.nextClassNum += 1
+    },
+    changeValue(modalName, id, newValue) {
+      console.log(this.$refs[modalName + id][0])
+      this.$refs[modalName + id][0].classList.remove('ion-valid');
+      this.$refs[modalName + id][0].classList.remove('ion-invalid');
+
+      if (newValue === '') return;
+
+      if (modalName == "class") {
+        for (let uClass in this.classes) {
+          if (uClass.id != id && uClass.value == newValue) {
+            this.$refs[modalName + id][0].classList.add('ion-invalid');
+            console.log("invalid")
+          }
+        }
+      }
+      
+      this.classes.find(obj => {
+        return obj.id === id 
+      })[modalName] = newValue
+
+      this.$refs[modalName + id][0].classList.add('ion-valid');
+    }
+  },
   setup() {
-    return { add }
+    return { save }
   }
 })
 </script>
 
-<style>
+<style scoped>
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%
-}
-
-.griditem {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:brown;
 }
 
 </style>

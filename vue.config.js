@@ -5,6 +5,10 @@ module.exports = defineConfig({
 			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
 		}
   },
+  devServer: {
+    proxy: 'http://localhost:3000',
+    allowedHosts: 'all',
+  },
   transpileDependencies: [
     'vuetify'
   ]

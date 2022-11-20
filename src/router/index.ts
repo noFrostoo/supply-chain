@@ -6,15 +6,23 @@ import LobbyPage from '../views/LobbyPage.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: () => import('@/views/WelcomePage.vue')
-  },
-  {
-    path: '/login',
     component: () => import('@/views/LoginPage.vue')
   },
   {
-    path: '/app/',
+    path: '/home/',
     component: () => import('@/views/MainPage.vue')
+  },
+  {
+    path: '/account/',
+    component: () => import('@/views/AccountPage.vue')
+  },
+  {
+    path: '/templates/',
+    component: () => import('@/views/TemplatesPage.vue')
+  },
+  {
+    path: '/quick_connect/',
+    component: () => import('@/views/QuickConnectPage.vue')
   },
   {
     path: '/game/',
@@ -39,12 +47,12 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/lobby/',
+    path: '/create_lobby/',
     component: LobbyPage,
     children: [
       {
         path: '',
-        redirect: '/lobby/PlayersPage'
+        redirect: '/create_lobby/PlayersPage'
       },
       {
         path: 'PlayersPage',

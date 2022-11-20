@@ -1,7 +1,11 @@
 <template>
-  <ion-page>
+  <MenuWidget/>
+  <ion-page id="main-content" >
     <ion-header>
       <ion-toolbar>
+        <ion-buttons  slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
         <ion-title>Players</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -31,7 +35,8 @@
 
 <script lang="js">
 import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonMenuButton, IonButtons, IonTitle, IonContent } from '@ionic/vue';
+import MenuWidget from '@/components/MenuWidget.vue';
 
 let players = [
           {
@@ -69,7 +74,7 @@ let players = [
 
 export default defineComponent({
   name: 'Tab3Page',
-  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { MenuWidget, IonHeader, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage },
   data() {
     return {
       players: players
@@ -89,7 +94,7 @@ export default defineComponent({
 </script>
 
 <style>
-.item {
+.grid-item {
   display: flex;
   align-items: center;
   justify-content: center;

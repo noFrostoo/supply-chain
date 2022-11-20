@@ -24,14 +24,15 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
+import store from './store'
 
 loadFonts()
 
-const app = createApp(App)
+const app = createApp(App).use(store)
   .use(IonicVue)
   .use(vuetify)
   .use(router);
-  
+
 router.isReady().then(() => {
   app.mount('#app');
 });
