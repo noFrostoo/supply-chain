@@ -10,12 +10,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Settings</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    
+
       <ion-grid>
         <ion-col>
           <ion-row class="griditem">
@@ -23,19 +18,25 @@
                 <ion-label position="floating">Max Rounds</ion-label>
             </ion-col>
             <ion-col size-md="2" >
-                <ion-input type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model="maxRounds" type="number" placeholder="Enter text"></ion-input>
+            </ion-col>
+            <ion-col size-md="2" >
+                <ion-label position="floating">Basic resource price</ion-label>
+            </ion-col>
+            <ion-col size-md="2" >
+                <ion-input v-model="resourceBasicPrice" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Show stats to users</ion-label>
-                <ion-checkbox></ion-checkbox>
+                <ion-checkbox v-model="showStats" ></ion-checkbox>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Unlimited money</ion-label>
-                <ion-checkbox></ion-checkbox>
+                <ion-checkbox v-model="unlimitedMoney"></ion-checkbox>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col>
+            <ion-col size-lg="4">
               <ion-button id="class" expand="block" >User Classes</ion-button>
             </ion-col>
             <ion-col>
@@ -45,7 +46,7 @@
                   v-for="uClass in classes"
                   :key="uClass"
                 >
-                  {{ uClass.class }}
+                  {{ uClass.class }},
                 </p>
               </ion-row>
             </ion-col>
@@ -59,6 +60,7 @@
                 <ion-button style="margin: 5px" id="transportCost">Set transport cost</ion-button>
               </ion-row>
               <ion-row class="row" >
+                <ion-button style="margin: 5px" id="magazineCost">Set magazine cost</ion-button>
                 <ion-button style="margin: 5px" id="fixOrderCost">Set fix order cost</ion-button>
                 <ion-button style="margin: 5px" id="backOrderCost">Set back order cost</ion-button>
                 <ion-button style="margin: 5px" id="additionalCost">Set additional cost</ion-button>
@@ -117,7 +119,7 @@
             :ref="`resourcePrice${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('resourcePrice', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.resourcePrice" type="number" @ionInput="changeValue('resourcePrice', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
         </ion-content>
@@ -141,7 +143,7 @@
             :ref="`startMoney${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMoney', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.startMagazine" type="number" @ionInput="changeValue('startMoney', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -150,7 +152,7 @@
     <ion-modal handle-behavior="cycle" ref="startMagazineModal"  :can-dismiss="canDismiss" trigger="startMagazine">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Start Magazine</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('startMagazine', false)">Close</ion-button>
             </ion-buttons>
@@ -165,31 +167,7 @@
             :ref="`startMagazine${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMagazine', uClass.id, $event.target.value)" ></ion-input>
-        </ion-item>
-        </ion-list>
-      </ion-content>
-    </ion-modal>
-
-    <ion-modal handle-behavior="cycle"  ref="startMagazineModal"  :can-dismiss="canDismiss" trigger="startMagazine">
-      <ion-header>
-        <ion-toolbar>
-            <ion-title>Start Money</ion-title>
-            <ion-buttons slot="end">
-            <ion-button @click="dissmisModal('startMagazine', false)">Close</ion-button>
-            </ion-buttons>
-        </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-        <ion-list>
-        <ion-item 
-            v-for="uClass in classes"
-            :key="uClass.id"
-            :id="uClass.id" 
-            :ref="`startMagazine${uClass.id}`"
-        >
-            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('startMagazine', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.startMagazine" type="number" @ionInput="changeValue('startMagazine', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -198,7 +176,7 @@
     <ion-modal handle-behavior="cycle" ref="transportCostModal" :can-dismiss="canDismiss" trigger="transportCost">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Transport Cost</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('transportCost', false)">Close</ion-button>
             </ion-buttons>
@@ -213,7 +191,7 @@
             :ref="`transportCost${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('transportCost', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.transportCost" type="number" @ionInput="changeValue('transportCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -222,7 +200,7 @@
     <ion-modal handle-behavior="cycle" ref="magazineCostModal"  :can-dismiss="canDismiss" trigger="magazineCost">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Magazine cost</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('magazineCost', false)">Close</ion-button>
             </ion-buttons>
@@ -237,7 +215,7 @@
             :ref="`magazineCost${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('magazineCost', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.magazineCost" type="number" @ionInput="changeValue('magazineCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -246,7 +224,7 @@
     <ion-modal handle-behavior="cycle" ref="fixOrderCostModal"  :can-dismiss="canDismiss" trigger="fixOrderCost">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Fix order cost</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('fixOrderCost', false)">Close</ion-button>
             </ion-buttons>
@@ -261,7 +239,7 @@
             :ref="`fixOrderCost${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('fixOrderCost', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.fixOrderCost" type="number" @ionInput="changeValue('fixOrderCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -270,7 +248,7 @@
     <ion-modal handle-behavior="cycle" ref="backOrderCostModal"  :can-dismiss="canDismiss" trigger="backOrderCost">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>Back order cost</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('backOrderCost', false)">Close</ion-button>
             </ion-buttons>
@@ -285,7 +263,7 @@
             :ref="`backOrderCost${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('backOrderCost', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.backOrderCost" type="number" @ionInput="changeValue('backOrderCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -294,7 +272,7 @@
     <ion-modal handle-behavior="cycle" ref="additionalCostModal"  :can-dismiss="canDismiss" trigger="additionalCost">
       <ion-header>
         <ion-toolbar>
-            <ion-title>Start Money</ion-title>
+            <ion-title>additional cost</ion-title>
             <ion-buttons slot="end">
             <ion-button @click="dissmisModal('additionalCost', false)">Close</ion-button>
             </ion-buttons>
@@ -309,7 +287,7 @@
             :ref="`additionalCost${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" type="number" @ionInput="changeValue('additionalCost', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.additionalCost" type="number" @ionInput="changeValue('additionalCost', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -333,7 +311,7 @@
             :ref="`startQueue${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.class" @ionInput="changeValue('startQueue', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.startQueue" @ionInput="changeValue('startQueue', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -436,16 +414,17 @@
 import { defineComponent } from 'vue';
 import { IonSelect, IonSelectOption ,IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonInput, IonModal, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { save } from 'ionicons/icons';
-import ClassValueModalVue from '@/components/ClassValueModal.vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 
 export default  defineComponent({
   name: 'SettingsPage',
-  props: ['updateSettings'],
+  props: ['updateSettings', 'initialSettings'],
   components: {IonHeader, MenuWidget,  IonSelect, IonSelectOption , IonToolbar, IonTitle, IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonContent, IonPage, IonModal, IonGrid, IonRow, IonCol, IonLabel, IonInput, },  
   data() {
-    return {
-      classes: [{
+    let nextId = 1;
+    let maxClassNum = 0;
+
+    let classes = [{
         id: 1,
         class: 1,
         startMoney: 1,
@@ -457,35 +436,108 @@ export default  defineComponent({
         backOrderCost: 1,
         additionalCost: 0,
         startQueue: [1,1],
-      }],
-      demand: {},
-      supply: {},
-      maxRounds: 0,
-      showStats: true,
-      unlimitedMoney: true,
+      }];
+    let maxRounds = 0;
+    let resourceBasicPrice = 1;
+    let showStats = true;
+    let unlimitedMoney = false;
+    let demand = {};
+    let supply = {};
+
+    if (this.initialSettings !== undefined) {
+      try {
+        for (let uClass in this.initialSettings.user_classes) {
+          classes.push({
+            id: nextId,
+            class: uClass,
+            startMoney: this.initialSettings.start_money[uClass],
+            resourcePrice: this.initialSettings.resource_price[uClass],
+            startMagazine: this.initialSettings.start_magazine[uClass],
+            transportCost: this.initialSettings.transport_cost[uClass],
+            magazineCost: this.initialSettings.start_money[uClass],
+            fixOrderCost: this.initialSettings.fix_order_cost[uClass],
+            backOrderCost: this.initialSettings.back_order_cost[uClass],
+            additionalCost: this.initialSettings.additional_cost[uClass],
+            startQueue: this.initialSettings.start_order_queue[uClass],
+          })
+          nextId += 1
+          if (uClass > maxClassNum) maxClassNum=uClass;
+        }
+      } catch (e) {
+        //TODO: show error to user
+      }
+      maxRounds = this.initialSettings.max_rounds;
+      resourceBasicPrice = this.initialSettings.resource_basic_price;
+      showStats = this.initialSettings.show_stats_for_users;
+      unlimitedMoney = this.initialSettings.unlimited_money;
+      demand = this.initialSettings.demand;
+      supply = this.initialSettings.supply;
+    }
+
+    return {
+      classes: classes,
+      demand: demand,
+      supply: supply,
+      resourceBasicPrice: resourceBasicPrice,
+      maxRounds: maxRounds,
+      showStats: showStats,
+      unlimitedMoney: unlimitedMoney,
       canDismiss: true,
-      nextClassNum: 2,
-      nextClassId: 2
+      nextClassNum: maxClassNum,
+      nextClassId: nextId
     }
   },
   methods: {
     saveSettings() {
+      let settings = {
+        demand_style: this.demand,
+        supply_style: this.style,
+        max_rounds: this.maxRounds,
+        show_stats_for_users: this.showStats,
+        unlimited_money: this.unlimitedMoney,
+        resource_basic_price: this.resourceBasicPrice,
+        user_classes: [],
+        start_order_queue: {},
+        resource_price: {},
+        start_money: {},
+        start_magazine: {},
+        transport_cost: {},
+        magazine_cost: {},
+        fix_order_cost: {},
+        back_order_cost: {},
+        additional_cost: {},
+      };
+
+      for (let uClass in this.classes) {
+        settings.user_classes.push(uClass.class);
+        settings.start_order_queue[uClass.class] = uClass.startQueue
+        settings.resource_price[uClass.class] = uClass.resourcePrice
+        settings.start_money[uClass.class] = uClass.startMoney
+        settings.start_magazine[uClass.class] = uClass.startMagazine
+        settings.transport_cost[uClass.class] = uClass.transportCost
+        settings.magazine_cost[uClass.class] = uClass.magazineCost
+        settings.fix_order_cost[uClass.class] = uClass.fixOrderCost
+        settings.back_order_cost[uClass.class] = uClass.backOrderCost
+        settings.additional_cost[uClass.class] = uClass.additionalCost
+      } 
+
       console.log("save")
+      this.updateSettings(settings)
     },  
     dissmisModal(modal, isOpen) {
       let modalsDismiss = {
-      "class": this.$refs.classModal.$el.dismiss(),
-      "resourcePrice": this.$refs.resourcePriceModal.$el.dismiss(),
-      "startMoney": this.$refs.startMoneyModal.$el.dismiss(),
-      "startMagazine": this.$refs.startMagazineModal.$el.dismiss(),
-      "transportCost": this.$refs.transportCostModal.$el.dismiss(),
-      "magazineCost": this.$refs.magazineCostModal.$el.dismiss(),
-      "fixOrderCost": this.$refs.fixOrderCostModal.$el.dismiss(),
-      "backOrderCost": this.$refs.backOrderCostModal.$el.dismiss(),
-      "additionalCost": this.$refs.additionalCostModal.$el.dismiss(),
-      "startQueue": this.$refs.startQueueModal.$el.dismiss(),
-      "demand": this.$refs.demandModal.$el.dismiss(),
-      "supply": this.$refs.supplyModal.$el.dismiss()
+        "class": this.$refs.classModal.$el.dismiss(),
+        "resourcePrice": this.$refs.resourcePriceModal.$el.dismiss(),
+        "startMoney": this.$refs.startMoneyModal.$el.dismiss(),
+        "startMagazine": this.$refs.startMagazineModal.$el.dismiss(),
+        "transportCost": this.$refs.transportCostModal.$el.dismiss(),
+        "magazineCost": this.$refs.magazineCostModal.$el.dismiss(),
+        "fixOrderCost": this.$refs.fixOrderCostModal.$el.dismiss(),
+        "backOrderCost": this.$refs.backOrderCostModal.$el.dismiss(),
+        "additionalCost": this.$refs.additionalCostModal.$el.dismiss(),
+        "startQueue": this.$refs.startQueueModal.$el.dismiss(),
+        "demand": this.$refs.demandModal.$el.dismiss(),
+        "supply": this.$refs.supplyModal.$el.dismiss()
       }
     },
     addClass() {

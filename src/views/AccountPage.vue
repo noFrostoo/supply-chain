@@ -29,7 +29,7 @@
   <script lang="ts">
   import { defineComponent } from 'vue';
   import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import MenuWidget from '@/components/MenuWidget.vue';
+  import MenuWidget from '@/components/MenuWidget.vue';
   
   
   export default defineComponent({
