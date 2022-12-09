@@ -1,4 +1,5 @@
 <template>
+  <ion-page>
     <MenuWidget></MenuWidget>
     <ion-page id="main-content" >
       <ion-header>
@@ -24,7 +25,8 @@
         </div>
       </ion-content>
     </ion-page>
-  </template>
+  </ion-page>
+</template>
   
   <script lang="ts">
   import { defineComponent } from 'vue';

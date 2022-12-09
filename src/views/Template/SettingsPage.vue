@@ -11,7 +11,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content :fullscreen="true">
-        <SettingsTab :initlobby="lobby" :update="update" :isTemplate="false" />
+        <SettingsTab :initLobby="template" :update="update" :isTemplate="true" />
       </ion-content>
     </ion-page>
   </ion-page>
@@ -19,25 +19,34 @@
 
 <script lang="js">
 import { defineComponent } from 'vue';
-import {  IonButtons, IonMenuButton, IonPage, IonHeader,  IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import {  IonButtons, IonPage, IonHeader, IonMenuButton, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 import SettingsTab from '@/components/SettingsTab.vue';
 
 export default  defineComponent({
   name: 'SettingsPage',
-  components: {IonHeader, IonButtons, IonMenuButton, MenuWidget, SettingsTab, IonToolbar, IonTitle, IonContent, IonPage, },  
+  components: {IonHeader, MenuWidget, SettingsTab, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage, },  
+  data() {
+    let template = this.$store.getters["template"]
+    if (template) {
+      console.log("got template", template)
+    } else {
+      console.log("template",template)
+      this.$store.dispatch("alert", "Problem with getting template")
+    }
+
+    return {
+      template
+    }
+  },
   methods: {
-    async update(lobby) {
-      console.log("updateSettings", lobby)
-      await this.$store.dispatch("updateLobby", lobby)
-      this.$store.dispatch("toast", "Saved")
+    update(template) {
+      this.$store.dispatch("updateTemplate", template)
     },
   },
-  computed: {
-    lobby() {
-      return this.$store.getters['lobby']
-    }
-  }
+  // setup() {
+    
+  // }
 })
 </script>
 

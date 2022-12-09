@@ -26,29 +26,28 @@ import MenuWidget from '@/components/MenuWidget.vue';
 import EventTab from '@/components/EventsTab.vue'
 
 let events = []
-let lobby = null
 
 export default defineComponent({
   name: 'EventPage',
-  components: { EventTab, IonHeader, MenuWidget, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonPage },
+  components: { EventTab, IonHeader, IonToolbar, IonButtons, IonMenuButton, MenuWidget, IonTitle, IonContent, IonPage },
   methods: {
     async updateEvents(events){
       console.log("events: ", events)
       this.events = events;
-      await this.$store.dispatch("updateLobbyEvents", events)
+      await this.$store.dispatch("updateTemplateEvents", events)
     }
   },
   data() {
-    lobby = this.$store.getters["lobby"]
-    if (lobby != null) {
-      events = lobby.events
+    let template = this.$store.getters["template"]
+    if (template) {
+      events = template.events
     } else {
       this.$store.dispatch("alert", "Problem with getting events")
     }
 
     return {
       events,
-      lobby
+      template
     }
   }
 

@@ -66,6 +66,26 @@ export const api = {
     return axios.put(`${APISUFFIX}/users/${userId}`, data, authHeaders(token));
   },
 
+  async fetchTemplates(token) {
+    return axios.get(`${APISUFFIX}/templates/`, authHeaders(token));
+  },
+
+  async fetchTemplate(token, id) {
+    return axios.get(`${APISUFFIX}/templates/${id}`, authHeaders(token));
+  },
+
+  async createTemplate(token, data) {
+    return axios.post(`${APISUFFIX}/templates/`, data, authHeaders(token));
+  },
+
+  async modifyTemplate(token, id, data) {
+    return axios.put(`${APISUFFIX}/templates/${id}`, data, authHeaders(token));
+  },
+
+  async deleteTemplate(token, id) {
+    return axios.delete(`${APISUFFIX}/templates/${id}`, authHeaders(token));
+  }
+
 
 
 };

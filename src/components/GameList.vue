@@ -14,7 +14,7 @@
             <ion-label>{{item}}</ion-label>
             <ion-label>{{item}}</ion-label>
             <ion-label>{{item}}</ion-label>
-            <ion-button>Connect</ion-button>
+            <ion-button @click="connect(item.id)">Connect</ion-button>
         </ion-item>
         </ion-list>
 
@@ -26,8 +26,9 @@
 </template>
 
 <script lang="js">
-  import {IonButton, IonContent, IonInfiniteScroll, IonInfiniteScrollContent, IonLabel, IonList, IonItem } from '@ionic/core';
+  import {IonButton, IonContent, IonCard, IonInfiniteScroll, IonInfiniteScrollContent, IonLabel, IonList, IonItem } from '@ionic/vue';
   import {ref } from "vue";
+  import { useIonRouter } from '@ionic/vue';
 
   let games = [
           {
@@ -201,8 +202,16 @@
       IonItem,
       IonLabel,
       IonList,
+      IonCard
     },
     name: "GameList",
+    methods: {
+      async connect(id) {
+        await this.$store.dispatch("connectPlayer", id)
+        this.$store.dispatch("toast", "Connected")
+        this.router.push(`/lobby/${id}/Players`)
+      }
+    },
     setup() {
       console.log("XDDD")
       let pageSize = 25
@@ -243,7 +252,8 @@
       isDisabled,
       toggleInfiniteScroll,
       loadData,
-      items
+      items,
+      router: useIonRouter()
     }
   },
     data () {

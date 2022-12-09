@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import GamePage from '../views/GamePage.vue'
 import LobbyPage from '../views/LobbyPage.vue'
+import Templates from "../views/TemplatesPage.vue"
+import Template from "../views/TemplatePage.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/templates/',
-    component: () => import('@/views/TemplatesPage.vue')
+    component: () => import('@/views/TemplatePage.vue')
   },
   {
     path: '/quick_connect/',
@@ -47,28 +49,57 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/create_lobby/',
+    path: '/lobby/:id',
     component: LobbyPage,
+    props: true,
     children: [
       {
         path: '',
-        redirect: '/create_lobby/PlayersPage'
+        redirect: '/lobby/:id/Settings'
       },
       {
-        path: 'PlayersPage',
+        path: 'Players',
         component: () => import('@/views/Lobby/PlayersPage.vue')
       },
       {
-        path: 'SettingsPage',
+        path: 'Settings',
         component: () => import('@/views/Lobby/SettingsPage.vue')
       },
       {
-        path: 'ControlPage',
+        path: 'Control',
         component: () => import('@/views/Lobby/ControlPage.vue')
       },
       {
-        path: 'EventsPage',
+        path: 'Events',
         component: () => import('@/views/Lobby/EventsPage.vue')
+      }
+    ]
+  },
+  {
+    path: '/yourtemplates/',
+    component: Templates,
+    props: true
+  },
+  {
+    path: '/template/:id',
+    component: Template,
+    props: true,
+    children: [
+      {
+        path: '',
+        redirect: '/template/:id/Settings'
+      },
+      {
+        path: 'Settings',
+        component: () => import('@/views/Template/SettingsPage.vue')
+      },
+      {
+        path: 'Events',
+        component: () => import('@/views/Template/EventsPage.vue')
+      },
+      {
+        path: 'Control',
+        component: () => import('@/views/Template/ControlPage.vue')
       }
     ]
   }

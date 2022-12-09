@@ -1,41 +1,43 @@
 <template>
-  <MenuWidget/>
-  <ion-page id="main-content" >
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons  slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-        <ion-title>Players</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
+  <ion-page>
+    <MenuWidget/>
+    <ion-page id="main-content" >
+      <ion-header>
         <ion-toolbar>
-          <ion-title size="large">Tab 3</ion-title>
+          <ion-buttons  slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+          <ion-title>Players</ion-title>
         </ion-toolbar>
       </ion-header>
-        <ion-list>
-          <ion-item
-              v-for="player in players"
-              :key="player"
-              class="item"
-          >
-              <ion-label>{{player.username}}</ion-label>
-              <ion-item>
-                <ion-input @change="changeClass(player.id)" type="number" placeholder="Class value here" :value="player.class"  ></ion-input>
-              </ion-item>
-              <ion-button>Kick</ion-button>
-          </ion-item>
-        </ion-list>
-      
-    </ion-content>
+      <ion-content :fullscreen="true">
+        <ion-header collapse="condense">
+          <ion-toolbar>
+            <ion-title size="large">Tab 3</ion-title>
+          </ion-toolbar>
+        </ion-header>
+          <ion-list>
+            <ion-item
+                v-for="player in players"
+                :key="player"
+                class="item"
+            >
+                <ion-label>{{player.username}}</ion-label>
+                <ion-item>
+                  <ion-input @change="changeClass(player.id)" type="number" placeholder="Class value here" :value="player.class"  ></ion-input>
+                </ion-item>
+                <ion-button>Kick</ion-button>
+            </ion-item>
+          </ion-list>
+        
+      </ion-content>
+    </ion-page>
   </ion-page>
 </template>
 
 <script lang="js">
 import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonMenuButton, IonButtons, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonList, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonMenuButton, IonButtons, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 
 let players = [
@@ -73,8 +75,8 @@ let players = [
         ];
 
 export default defineComponent({
-  name: 'Tab3Page',
-  components: { MenuWidget, IonHeader, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage },
+  name: 'PlayersPage',
+  components: { MenuWidget, IonHeader, IonList, IonButton,IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage },
   data() {
     return {
       players: players

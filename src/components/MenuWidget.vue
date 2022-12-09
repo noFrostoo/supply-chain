@@ -8,9 +8,9 @@
       <ion-content class="ion-padding">
             <ion-button style="margin:2px" expand="block" router-link="/account" >Account</ion-button>
             <ion-button style="margin:2px" expand="block" router-link="/quick_connect">Quick Connect</ion-button>
-            <ion-button style="margin:2px" expand="block" router-link="/create_lobby/" >Create Lobby</ion-button>
-            <ion-button style="margin:2px" expand="block" router-link="/lobbies">Your's lobbies</ion-button>
-            <ion-button style="margin:2px" expand="block" router-link="/templates">Templates</ion-button>
+            <ion-button style="margin:2px" expand="block" router-link="/lobby/new/Settings" >Create Lobby</ion-button>
+            <ion-button style="margin:2px" expand="block" router-link="/yourlobbies">Your's lobbies</ion-button>
+            <ion-button style="margin:2px" expand="block" router-link="/yourtemplates/">Templates</ion-button>
             <ion-button style="margin:2px" expand="block" >Log out</ion-button>
 
       </ion-content>

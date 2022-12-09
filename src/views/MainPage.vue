@@ -1,37 +1,38 @@
 <template>
+  <ion-page>
     <MenuVue/>
     <ion-page id="main-content">
-    <ion-content fullscreen scroll-y="false">
+      <ion-content fullscreen scroll-y="false">
       <!-- <ion-header collapse="condense"> -->
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons  slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-title>
-            <ion-searchbar style="width: 50%" animated="true" placeholder="Game name"></ion-searchbar>
-          </ion-title>
-        </ion-toolbar>
-      </ion-header> 
-      <ion-grid >
-        <ion-col>
-            <ion-row>
-                <ion-col style="height:10%">
-                    <ion-row class="item" >
-                      
-                    </ion-row>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons  slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-title>
+              <ion-searchbar style="width: 50%" animated="true" placeholder="Game name"></ion-searchbar>
+            </ion-title>
+          </ion-toolbar>
+        </ion-header> 
+        <ion-grid >
+          <ion-col>
+              <ion-row>
+                  <ion-col style="height:10%">
+                      <ion-row class="item" >
+                        
+                      </ion-row>
+                  </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <GameList/>
                 </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <GameList/>
-              </ion-col>
-            </ion-row>
-        </ion-col>
-      </ion-grid>
-    </ion-content>
+              </ion-row>
+          </ion-col>
+        </ion-grid>
+      </ion-content>
+    </ion-page>
   </ion-page>
-  
 </template>
 
 <script lang="js">

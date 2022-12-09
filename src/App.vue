@@ -1,7 +1,9 @@
 <template>
+  <Suspense>
   <ion-app>
     <ion-router-outlet />
   </ion-app>
+  </Suspense>
 </template>
 
 <script lang="ts">

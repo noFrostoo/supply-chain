@@ -166,10 +166,14 @@ let defaultEvent = {
 }
 
 export default defineComponent({
-  name: 'EventPage',
-  props: ["updateEvents"],
+  name: 'EventTab',
+  props: ["updateEvents", "initialEvents"],
   components: { IonList, IonItem, IonCheckbox, IonAccordion, IonAccordionGroup, IonSelect, IonLabel, IonInput, IonFab, IonButton, IonButtons, IonFabButton, IonIcon, IonSelectOption, IonHeader, IonToolbar, IonModal, IonTitle, IonContent },
   data() {
+    if (this.initialEvents !== undefined) {
+      events = this.initialEvents
+    }
+  
     return {
       events,
       isOpen: false,
