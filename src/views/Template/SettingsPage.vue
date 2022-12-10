@@ -22,6 +22,7 @@ import { defineComponent } from 'vue';
 import {  IonButtons, IonPage, IonHeader, IonMenuButton, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 import SettingsTab from '@/components/SettingsTab.vue';
+import { utils } from '@/utlis';
 
 export default  defineComponent({
   name: 'SettingsPage',

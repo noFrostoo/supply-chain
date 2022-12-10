@@ -33,7 +33,8 @@
   import MenuVue from '@/components/MenuWidget.vue';
   import { add } from 'ionicons/icons';
   import { useIonRouter } from '@ionic/vue';
-  
+  import { api } from '@/api';
+
   let templates = null
 
   export default {
@@ -62,16 +63,19 @@
         await this.fetchTemplates();
       },
       async fetchTemplates() {
-        return []
+        return await (await api.fetchTemplates(this.$store.getters["token"])).data
       },
     },
-    async setup() {
-      templates = []
+    data() {
       return {
-        templates,
+        templates: [],
         add,
         router: useIonRouter(),
       }
+    },
+    async created() {
+      this.templates = await (await api.fetchTemplates(this.$store.getters["token"])).data
+      console.log(this.templates)
     },
   }
 </script>

@@ -67,23 +67,43 @@ export const api = {
   },
 
   async fetchTemplates(token) {
-    return axios.get(`${APISUFFIX}/templates/`, authHeaders(token));
+    return axios.get(`${APISUFFIX}/template`, authHeaders(token));
   },
 
   async fetchTemplate(token, id) {
-    return axios.get(`${APISUFFIX}/templates/${id}`, authHeaders(token));
+    return axios.get(`${APISUFFIX}/template/${id}`, authHeaders(token));
   },
 
   async createTemplate(token, data) {
-    return axios.post(`${APISUFFIX}/templates/`, data, authHeaders(token));
+    return axios.post(`${APISUFFIX}/template`, data, authHeaders(token));
   },
 
   async modifyTemplate(token, id, data) {
-    return axios.put(`${APISUFFIX}/templates/${id}`, data, authHeaders(token));
+    return axios.put(`${APISUFFIX}/template/${id}`, data, authHeaders(token));
   },
 
   async deleteTemplate(token, id) {
-    return axios.delete(`${APISUFFIX}/templates/${id}`, authHeaders(token));
+    return axios.delete(`${APISUFFIX}/template/${id}`, authHeaders(token));
+  },
+
+  async fetchLobbies(token) {
+    return axios.get(`${APISUFFIX}/template`, authHeaders(token));
+  },
+
+  async fetchLobby(token, id) {
+    return axios.get(`${APISUFFIX}/Lobby/${id}`, authHeaders(token));
+  },
+
+  async createLobby(token, data) {
+    return axios.post(`${APISUFFIX}/Lobby`, data, authHeaders(token));
+  },
+
+  async modifyLobby(token, id, data) {
+    return axios.put(`${APISUFFIX}/Lobby/${id}`, data, authHeaders(token));
+  },
+
+  async deleteLobby(token, id) {
+    return axios.delete(`${APISUFFIX}/Lobby/${id}`, authHeaders(token));
   }
 
 

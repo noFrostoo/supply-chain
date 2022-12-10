@@ -2,32 +2,40 @@
     <ion-content>
         <ion-grid>
         <ion-col>
-          <ion-row v-if="!isTemplate" class="griditem">
+          <ion-row>
+            <ion-col >
+                <ion-label position="floating">Name</ion-label>
+            </ion-col>
+            <ion-col >
+                <ion-input v-model="lobby.name" placeholder="Enter text"></ion-input>
+            </ion-col>
             <ion-col >
                 <ion-label position="floating">Max Players</ion-label>
             </ion-col>
             <ion-col >
-                <ion-input v-model="maxPlayers" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model="lobby.max_players" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
+          </ion-row>
+          <ion-row v-if="!isTemplate" class="griditem">
             <ion-col>
                 <ion-label position="floating">Generate Connect Code</ion-label>
-                <ion-checkbox v-model="generateCode" ></ion-checkbox>
+                <ion-checkbox v-model="lobby.generate_code" ></ion-checkbox>
             </ion-col>
             <ion-col >
                 <ion-label position="floating">Connect Code Use Times</ion-label>
             </ion-col>
             <ion-col >
-                <ion-input v-model="codeUseTimes" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model="lobby.code_use_times" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Public</ion-label>
-                <ion-checkbox v-model="publicLobby" ></ion-checkbox>
+                <ion-checkbox v-model="lobby.public_lobby" ></ion-checkbox>
             </ion-col>
             <ion-col >
                 <ion-label position="floating">Password</ion-label>
             </ion-col>
             <ion-col >
-                <ion-input v-model="password" placeholder="Enter password or leave empty"></ion-input>
+                <ion-input v-model="lobby.password" placeholder="Enter password or leave empty"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row class="griditem">
@@ -35,21 +43,21 @@
                 <ion-label position="floating">Max Rounds</ion-label>
             </ion-col>
             <ion-col size-md="2" >
-                <ion-input v-model="maxRounds" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model="lobby.settings.max_rounds" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col size-md="2" >
                 <ion-label position="floating">Basic resource price</ion-label>
             </ion-col>
             <ion-col size-md="2" >
-                <ion-input v-model="resourceBasicPrice" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model="lobby.settings.resource_basic_price" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Show stats to users</ion-label>
-                <ion-checkbox v-model="showStats" ></ion-checkbox>
+                <ion-checkbox v-model="lobby.settings.show_stats_for_users" ></ion-checkbox>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Unlimited money</ion-label>
-                <ion-checkbox v-model="unlimitedMoney"></ion-checkbox>
+                <ion-checkbox v-model="lobby.settings.unlimited_money"></ion-checkbox>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -345,32 +353,32 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-select v-model="demand.type" interface="action-sheet" placeholder="Select type">
+            <ion-select v-model="lobby.settings.demand.type" interface="action-sheet" placeholder="Select type">
                 <ion-select-option value="Linear">Linear</ion-select-option>
                 <ion-select-option value="Multiplication">Multiplication</ion-select-option>
                 <ion-select-option value="Exponential">Exponential</ion-select-option>
                 <ion-select-option value="list">List</ion-select-option>
             </ion-select>
             </ion-item>
-            <ion-item v-if="demand.type == 'Linear' || demand.type == 'Multiplication' || demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand.type == 'Linear' || lobby.settings.demand.type == 'Multiplication' || lobby.settings.demand.type == 'Exponential'">
                 <ion-label position="floating">Start</ion-label>
-                <ion-input v-model="demand.start" type="number" ></ion-input>
+                <ion-input v-model="lobby.settings.demand.start" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="demand.type == 'Linear' || demand.type == 'Multiplication'">
+            <ion-item v-if="lobby.settings.demand.type == 'Linear' || lobby.settings.demand.type == 'Multiplication'">
                 <ion-label position="floating">Increase</ion-label>
-                <ion-input v-model="demand.increase" type="number" ></ion-input>
+                <ion-input v-model="lobby.settings.demand.increase" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand.type == 'Exponential'">
                 <ion-label position="floating">Power</ion-label>
-                <ion-input v-model="demand.power" type="number" ></ion-input>
+                <ion-input v-model="lobby.settings.demand.power" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand.type == 'Exponential'">
                 <ion-label position="floating">Modulator</ion-label>
-                <ion-input v-model="demand.modulator" type="number" ></ion-input>
+                <ion-input v-model="lobby.settings.demand.modulator" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="demand.type == 'List'">
+            <ion-item v-if="lobby.settings.demand.type == 'List'">
                 <ion-label position="floating">Enter list(separated ",")</ion-label>
-                <ion-input v-model="demand.list"></ion-input>
+                <ion-input v-model="lobby.settings.demand.list"></ion-input>
             </ion-item>
         </ion-content>
     </ion-modal>
@@ -386,32 +394,32 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-select v-model="supply.type" interface="action-sheet" placeholder="Select type">
+            <ion-select v-model="lobby.settings.supply.type" interface="action-sheet" placeholder="Select type">
                 <ion-select-option value="Linear">Linear</ion-select-option>
                 <ion-select-option value="Multiplication">Multiplication</ion-select-option>
                 <ion-select-option value="Exponential">Exponential</ion-select-option>
                 <ion-select-option value="list">List</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item  v-if="supply.type == 'Linear' || supply.type == 'Multiplication' || supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply.type == 'Linear' || lobby.settings.supply.type == 'Multiplication' || lobby.settings.supply.type == 'Exponential'">
               <ion-label position="floating">Start</ion-label>
-              <ion-input v-model="supply.start" type="number" ></ion-input>
+              <ion-input v-model="lobby.settings.supply.start" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="supply.type == 'Linear' || supply.type == 'Multiplication'">
+          <ion-item  v-if="lobby.settings.supply.type == 'Linear' || lobby.settings.supply.type == 'Multiplication'">
               <ion-label position="floating">Increase</ion-label>
-              <ion-input v-model="supply.increase" type="number" ></ion-input>
+              <ion-input v-model="lobby.settings.supply.increase" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply.type == 'Exponential'">
               <ion-label position="floating">Power</ion-label>
-              <ion-input v-model="supply.power" type="number" ></ion-input>
+              <ion-input v-model="lobby.settings.supply.power" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply.type == 'Exponential'">
               <ion-label position="floating">Modulator</ion-label>
-              <ion-input v-model="supply.modulator" type="number" ></ion-input>
+              <ion-input v-model="lobby.settings.supply.modulator" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="supply.type == 'List'">
+          <ion-item  v-if="lobby.settings.supply.type == 'List'">
               <ion-label position="floating">Enter list(separated ",")</ion-label>
-              <ion-input v-model="supply.list"></ion-input>
+              <ion-input v-model="lobby.settings.supply.list"></ion-input>
           </ion-item>
         </ion-content>
     </ion-modal>
@@ -429,6 +437,7 @@
 <script>
 import { IonSelect, IonSelectOption,IonIcon, IonFab, IonFabButton ,IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonInput, IonModal, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { save } from 'ionicons/icons';
+import { utils } from '@/utlis'; 
 
   let lobby = null;
 
@@ -437,139 +446,23 @@ export default {
   props: ['update', 'initLobby', "isTemplate"],
   components: {IonHeader, IonIcon, IonSelect,IonFab, IonFabButton, IonSelectOption , IonToolbar, IonTitle, IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonContent, IonModal, IonGrid, IonRow, IonCol, IonLabel, IonInput, },  
   data() {
-    let nextId = 1;
-    let maxClassNum = 0;
     lobby = this.initLobby;
-
-    console.log("lobby: ", lobby, ", innitLobby", this.initLobby, "update", this.update, "isTemplate", this.isTemplate)
-
-    let classes = [{
-        id: 1,
-        class: 1,
-        startMoney: 1,
-        resourcePrice: 1,
-        startMagazine: 1,
-        transportCost: 1,
-        magazineCost: 1,
-        fixOrderCost: 1,
-        backOrderCost: 1,
-        additionalCost: 0,
-        startQueue: [1,1],
-      }];
-    let maxRounds = 0;
-    let maxPlayers = 4;
-    let resourceBasicPrice = 1;
-    let generateCode = false;
-    let codeUseTimes = 4;
-    let password = null
-    let publicLobby = true;
-    let showStats = true;
-    let unlimitedMoney = false;
-    let demand = {};
-    let supply = {};
-
-    if (this.lobby != null && this.lobby !== undefined) {
-      try {
-        for (let uClass in this.lobby.settings.user_classes) {
-          classes.push({
-            id: nextId,
-            class: uClass,
-            startMoney: this.lobby.settings.start_money[uClass],
-            resourcePrice: this.lobby.settings.resource_price[uClass],
-            startMagazine: this.lobby.settings.start_magazine[uClass],
-            transportCost: this.lobby.settings.transport_cost[uClass],
-            magazineCost: this.lobby.settings.start_money[uClass],
-            fixOrderCost: this.lobby.settings.fix_order_cost[uClass],
-            backOrderCost: this.lobby.settings.back_order_cost[uClass],
-            additionalCost: this.lobby.settings.additional_cost[uClass],
-            startQueue: this.lobby.settings.start_order_queue[uClass],
-          })
-          nextId += 1
-          if (uClass > maxClassNum) maxClassNum=uClass;
-        }
-      } catch (e) {
-        //TODO: show error to user
-      }
-      maxRounds = this.lobby.settings.max_rounds;
-      resourceBasicPrice = this.lobby.settings.resource_basic_price;
-      showStats = this.lobby.settings.show_stats_for_users;
-      unlimitedMoney = this.lobby.settings.unlimited_money;
-      demand = this.lobby.settings.demand;
-      supply = this.lobby.settings.supply;
-
-      if(this.isTemplate) {
-        maxPlayers = this.lobby.max_players;
-        generateCode = this.lobby.code_use_times
-        publicLobby = this.lobby.public;
-        if(this.lobby.password)
-          password = this.lobby.password;
-      }
-    }
+    let {classes, nextId, maxClassNum} = utils.parseClasses(lobby)
+    console.log("lobby: ", lobby, ", innitLobby", this.initLobby, "update", this.update, "isTemplate", this.isTemplate, "classes", classes)
 
     return {
       classes: classes,
-      demand: demand,
-      supply: supply,
-      resourceBasicPrice: resourceBasicPrice,
-      maxRounds: maxRounds,
-      showStats: showStats,
-      unlimitedMoney: unlimitedMoney,
       canDismiss: true,
       nextClassNum: maxClassNum,
       nextClassId: nextId,
-      maxPlayers: maxPlayers,
-      generateCode: generateCode,
-      codeUseTimes: codeUseTimes,
-      publicLobby: publicLobby,
-      password: password,
       lobby: lobby
     }
   },
   methods: {
     saveSettings() {
-      let settings = {
-        demand_style: this.demand,
-        supply_style: this.style,
-        max_rounds: this.maxRounds,
-        show_stats_for_users: this.showStats,
-        unlimited_money: this.unlimitedMoney,
-        resource_basic_price: this.resourceBasicPrice,
-        user_classes: [],
-        start_order_queue: {},
-        resource_price: {},
-        start_money: {},
-        start_magazine: {},
-        transport_cost: {},
-        magazine_cost: {},
-        fix_order_cost: {},
-        back_order_cost: {},
-        additional_cost: {},
-      };
-
-      for (let uClass in this.classes) {
-        settings.user_classes.push(uClass.class);
-        settings.start_order_queue[uClass.class] = uClass.startQueue
-        settings.resource_price[uClass.class] = uClass.resourcePrice
-        settings.start_money[uClass.class] = uClass.startMoney
-        settings.start_magazine[uClass.class] = uClass.startMagazine
-        settings.transport_cost[uClass.class] = uClass.transportCost
-        settings.magazine_cost[uClass.class] = uClass.magazineCost
-        settings.fix_order_cost[uClass.class] = uClass.fixOrderCost
-        settings.back_order_cost[uClass.class] = uClass.backOrderCost
-        settings.additional_cost[uClass.class] = uClass.additionalCost
-      } 
-
-      console.log("lobby: ", this.lobby)
-      this.lobby.settings = settings;
-      if(this.isTemplate) {
-        this.lobby.max_players = this.maxPlayers;
-        this.lobby.code_use_times = this.generateCode;
-        this.lobby.public = this.publicLobby;
-        if (this.password != null) {
-          this.lobby.password = this.password
-        }
-      }
-      this.update(this.lobby)
+      let lobby = utils.toTemplateApi(this.lobby, this.classes)
+      console.log("saving settings: ", lobby)
+      this.update(lobby)
     },  
     dissmisModal(modal, isOpen) {
       let modalsDismiss = {

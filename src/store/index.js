@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { userModule } from './user';
 import {alertController, toastController} from "@ionic/vue";
+import { api } from '@/api';
 
 export default createStore({
   state: {
@@ -34,6 +35,7 @@ export default createStore({
       state.newTemplate = true
       let template = {
         name: "XD",
+        max_players: 4,
         settings: {
           max_rounds: 2,
           resource_basic_price: 15,
@@ -41,6 +43,7 @@ export default createStore({
           unlimited_money: false,
           user_classes: [1],
           start_money: {1:100},
+          start_magazine: {1: 100},
           resource_price: {1:10},
           transport_cost: {1:2},
           magazine_cost: {1:1},
@@ -48,18 +51,20 @@ export default createStore({
           back_order_cost: {1:1},
           additional_cost: {1:0},
           start_order_queue: {1:[4,4]},
-          demand: {
+          demand_style: {
             type: 'Linear',
             start: 10,
             increase: 5,
           },
-          supply: {
+          supply_style: {
             type: 'Linear',
             start: 10,
             increase: 5,
           }
         },
-        events: []
+        events: {
+          events: []
+        }
       }
       state.template = template
     },
@@ -77,6 +82,7 @@ export default createStore({
           unlimited_money: false,
           user_classes: [1],
           start_money: {1:100},
+          start_magazine: {1: 100},
           resource_price: {1:10},
           transport_cost: {1:2},
           magazine_cost: {1:1},
@@ -84,18 +90,20 @@ export default createStore({
           back_order_cost: {1:1},
           additional_cost: {1:0},
           start_order_queue: {1:[4,4]},
-          demand: {
+          demand_style: {
             type: 'Linear',
             start: 10,
             increase: 5,
           },
-          supply: {
+          supply_style: {
             type: 'Linear',
             start: 10,
             increase: 5,
           }
         },
-        events: []
+        events: {
+          events: []
+        }
       }
       state.lobby = lobby
       state.newLobby = true
@@ -133,6 +141,8 @@ export default createStore({
     },
     async createLobby(context) {
       console.log("create lobby")
+      //TODO: handle error
+      let template = await (await api.createLobby(context.getters["token"], context.state.lobby)).data
       context.state.newLobby = false
       return context.state.lobby
     },
@@ -143,96 +153,38 @@ export default createStore({
       console.log("deleting lobby")
     },
     async updateTemplate(context, payload) {
-      context.state.template = payload
-      console.log("update template")
-      return payload
+      console.log("update template", payload)
+      context.state.template = await (await api.modifyTemplate(context.getters["token"], payload.id, payload)).data
+      return context.state.template
     },
-    async createTemplate(context, payload) {
-      context.state.template = payload
-      return payload
+    async createTemplate(context) {
+      //TODO: handle error
+      let template = await (await api.createTemplate(context.getters["token"], context.state.template)).data
+      context.state.template = template
+      return template
     },
     async deleteTemplate(context) {
       context.state.template = null
       context.state.newTemplate = false
     },
     async updateTemplateEvents(context, payload) {
-      context.state.template.events = payload
+      context.state.template.events.events = payload
       console.log("update template events")
     },
     async updateLobbyEvents(context, payload) {
-      context.state.lobby.events = payload
+      context.state.lobby.events.events = payload
       console.log("update lobby events")
     },
     async fetchLobby(context, id) {
-      console.log("Fetiching lobby")
-      let lobby = {
-        id: "xd",
-        public: true,
-        max_players: 4,
-        code_use_times: 4,
-        settings: {
-          max_rounds: 2,
-          resource_basic_price: 15,
-          show_stats_for_users: true,
-          unlimited_money: false,
-          user_classes: [1],
-          start_money: {1:100},
-          resource_price: {1:10},
-          transport_cost: {1:2},
-          magazine_cost: {1:1},
-          fix_order_cost: {1:1},
-          back_order_cost: {1:1},
-          additional_cost: {1:0},
-          start_order_queue: {1:[4,4]},
-          demand: {
-            type: 'Linear',
-            start: 10,
-            increase: 5,
-          },
-          supply: {
-            type: 'Linear',
-            start: 10,
-            increase: 5,
-          }
-        },
-        events: []
-      }
+      console.log("Fetching lobby")
+      let lobby = await (await api.fetchLobby(context.getters["token"], id)).data
       context.state.lobby = lobby
       context.state.newLobby = false
       return context.state.lobby
     },
     async fetchTemplate(context, id) {
-      console.log("Fetiching template")
-      let template = {
-        id: "xd",
-        name: "XD",
-        settings: {
-          max_rounds: 2,
-          resource_basic_price: 15,
-          show_stats_for_users: true,
-          unlimited_money: false,
-          user_classes: [1],
-          start_money: {1:100},
-          resource_price: {1:10},
-          transport_cost: {1:2},
-          magazine_cost: {1:1},
-          fix_order_cost: {1:1},
-          back_order_cost: {1:1},
-          additional_cost: {1:0},
-          start_order_queue: {1:[4,4]},
-          demand: {
-            type: 'Linear',
-            start: 10,
-            increase: 5,
-          },
-          supply: {
-            type: 'Linear',
-            start: 10,
-            increase: 5,
-          }
-        },
-        events: []
-      }
+      console.log("Fetching template")
+      let template = await (await api.fetchTemplate(context.getters["token"], id)).data
       context.state.template = template
       context.state.newTemplate = false
       return context.state.template

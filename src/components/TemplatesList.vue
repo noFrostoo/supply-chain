@@ -7,9 +7,9 @@
             role="article"
         >
             <ion-label>{{item.name}}</ion-label>
-            <ion-button>Edit</ion-button>
+            <ion-button @click="editTemplate(item.id)">Edit</ion-button>
             <ion-button>Create Lobby</ion-button>
-            <ion-button>Delete</ion-button>
+            <ion-button @click="deleteTemplate(item.id)">Delete</ion-button>
         </ion-item>
         </ion-list>
 
@@ -39,8 +39,17 @@
     props: ["templates"],
     methods: {
       async editTemplate(id){
-        this.$store.dispatch("fetchTemplate", id)
-        this.router.push(`/template/${id}/SettingsPage`)
+        await this.$store.dispatch("fetchTemplate", id)
+        this.router.push(`/template/${id}/Settings`)
+      },
+      async deleteTemplate(id) {
+        this.$store.dispatch("deleteTemplate", id)
+        this.router.push(`/yourtemplates/`)
+      }
+    },
+    data() {
+      return{ 
+        router: useIonRouter()
       }
     },
     created() {
@@ -85,7 +94,6 @@
       toggleInfiniteScroll,
       loadData,
       items,
-      router: useIonRouter()
     }
   },
   }
