@@ -13,7 +13,7 @@
                 <ion-label position="floating">Max Players</ion-label>
             </ion-col>
             <ion-col >
-                <ion-input v-model="lobby.max_players" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model.number="lobby.max_players" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
           </ion-row>
           <ion-row v-if="!isTemplate" class="griditem">
@@ -25,7 +25,7 @@
                 <ion-label position="floating">Connect Code Use Times</ion-label>
             </ion-col>
             <ion-col >
-                <ion-input v-model="lobby.code_use_times" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model.number="lobby.code_use_times" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Public</ion-label>
@@ -43,13 +43,13 @@
                 <ion-label position="floating">Max Rounds</ion-label>
             </ion-col>
             <ion-col size-md="2" >
-                <ion-input v-model="lobby.settings.max_rounds" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model.number="lobby.settings.max_rounds" value="number" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col size-md="2" >
                 <ion-label position="floating">Basic resource price</ion-label>
             </ion-col>
             <ion-col size-md="2" >
-                <ion-input v-model="lobby.settings.resource_basic_price" type="number" placeholder="Enter text"></ion-input>
+                <ion-input v-model.number="lobby.settings.resource_basic_price" type="number" placeholder="Enter text"></ion-input>
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Show stats to users</ion-label>
@@ -353,32 +353,32 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-select v-model="lobby.settings.demand.type" interface="action-sheet" placeholder="Select type">
+            <ion-select v-model="lobby.settings.demand_style.type" interface="action-sheet" placeholder="Select type">
                 <ion-select-option value="Linear">Linear</ion-select-option>
                 <ion-select-option value="Multiplication">Multiplication</ion-select-option>
                 <ion-select-option value="Exponential">Exponential</ion-select-option>
                 <ion-select-option value="list">List</ion-select-option>
             </ion-select>
             </ion-item>
-            <ion-item v-if="lobby.settings.demand.type == 'Linear' || lobby.settings.demand.type == 'Multiplication' || lobby.settings.demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand_style.type == 'Linear' || lobby.settings.demand_style.type == 'Multiplication' || lobby.settings.demand_style.type == 'Exponential'">
                 <ion-label position="floating">Start</ion-label>
-                <ion-input v-model="lobby.settings.demand.start" type="number" ></ion-input>
+                <ion-input v-model.number="lobby.settings.demand_style.start" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="lobby.settings.demand.type == 'Linear' || lobby.settings.demand.type == 'Multiplication'">
+            <ion-item v-if="lobby.settings.demand_style.type == 'Linear' || lobby.settings.demand_style.type == 'Multiplication'">
                 <ion-label position="floating">Increase</ion-label>
-                <ion-input v-model="lobby.settings.demand.increase" type="number" ></ion-input>
+                <ion-input v-model.number="lobby.settings.demand_style.increase" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="lobby.settings.demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand_style.type == 'Exponential'">
                 <ion-label position="floating">Power</ion-label>
-                <ion-input v-model="lobby.settings.demand.power" type="number" ></ion-input>
+                <ion-input v-model.number="lobby.settings.demand_style.power" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="lobby.settings.demand.type == 'Exponential'">
+            <ion-item v-if="lobby.settings.demand_style.type == 'Exponential'">
                 <ion-label position="floating">Modulator</ion-label>
-                <ion-input v-model="lobby.settings.demand.modulator" type="number" ></ion-input>
+                <ion-input v-model.number="lobby.settings.demand_style.modulator" type="number" ></ion-input>
             </ion-item>
-            <ion-item v-if="lobby.settings.demand.type == 'List'">
+            <ion-item v-if="lobby.settings.demand_style.type == 'List'">
                 <ion-label position="floating">Enter list(separated ",")</ion-label>
-                <ion-input v-model="lobby.settings.demand.list"></ion-input>
+                <ion-input v-model="lobby.settings.demand_style.list"></ion-input>
             </ion-item>
         </ion-content>
     </ion-modal>
@@ -394,32 +394,32 @@
         </ion-header>
         <ion-content class="ion-padding">
           <ion-item>
-            <ion-select v-model="lobby.settings.supply.type" interface="action-sheet" placeholder="Select type">
+            <ion-select v-model="lobby.settings.supply_style.type" interface="action-sheet" placeholder="Select type">
                 <ion-select-option value="Linear">Linear</ion-select-option>
                 <ion-select-option value="Multiplication">Multiplication</ion-select-option>
                 <ion-select-option value="Exponential">Exponential</ion-select-option>
                 <ion-select-option value="list">List</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item  v-if="lobby.settings.supply.type == 'Linear' || lobby.settings.supply.type == 'Multiplication' || lobby.settings.supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply_style.type == 'Linear' || lobby.settings.supply_style.type == 'Multiplication' || lobby.settings.supply_style.type == 'Exponential'">
               <ion-label position="floating">Start</ion-label>
-              <ion-input v-model="lobby.settings.supply.start" type="number" ></ion-input>
+              <ion-input v-model.number="lobby.settings.supply_style.start" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="lobby.settings.supply.type == 'Linear' || lobby.settings.supply.type == 'Multiplication'">
+          <ion-item  v-if="lobby.settings.supply_style.type == 'Linear' || lobby.settings.supply_style.type == 'Multiplication'">
               <ion-label position="floating">Increase</ion-label>
-              <ion-input v-model="lobby.settings.supply.increase" type="number" ></ion-input>
+              <ion-input v-model.number="lobby.settings.supply_style.increase" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="lobby.settings.supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply_style.type == 'Exponential'">
               <ion-label position="floating">Power</ion-label>
-              <ion-input v-model="lobby.settings.supply.power" type="number" ></ion-input>
+              <ion-input v-model.number="lobby.settings.supply_style.power" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="lobby.settings.supply.type == 'Exponential'">
+          <ion-item  v-if="lobby.settings.supply_style.type == 'Exponential'">
               <ion-label position="floating">Modulator</ion-label>
-              <ion-input v-model="lobby.settings.supply.modulator" type="number" ></ion-input>
+              <ion-input v-model.number="lobby.settings.supply_style.modulator" type="number" ></ion-input>
           </ion-item>
-          <ion-item  v-if="lobby.settings.supply.type == 'List'">
+          <ion-item  v-if="lobby.settings.supply_style.type == 'List'">
               <ion-label position="floating">Enter list(separated ",")</ion-label>
-              <ion-input v-model="lobby.settings.supply.list"></ion-input>
+              <ion-input v-model="lobby.settings.supply_style.list"></ion-input>
           </ion-item>
         </ion-content>
     </ion-modal>
@@ -455,11 +455,13 @@ export default {
       canDismiss: true,
       nextClassNum: maxClassNum,
       nextClassId: nextId,
-      lobby: lobby
+      lobby: lobby,
+      bad_value: false
     }
   },
   methods: {
     saveSettings() {
+      console.log("classes", this.classes, "lobby", this.lobby)
       let lobby = utils.toTemplateApi(this.lobby, this.classes)
       console.log("saving settings: ", lobby)
       this.update(lobby)
@@ -486,26 +488,23 @@ export default {
       this.nextClassNum += 1
     },
     changeValue(modalName, id, newValue) {
-      console.log(this.$refs[modalName + id][0])
-      this.$refs[modalName + id][0].classList.remove('ion-valid');
-      this.$refs[modalName + id][0].classList.remove('ion-invalid');
-
-      if (newValue === '') return;
+      if (newValue === '') {
+        this.$store.dispatch("alert", "bad value entered")
+        return
+      }
 
       if (modalName == "class") {
         for (let uClass in this.classes) {
           if (uClass.id != id && uClass.value == newValue) {
-            this.$refs[modalName + id][0].classList.add('ion-invalid');
-            console.log("invalid")
+            this.$store.dispatch("alert", "class exists")
+            return
           }
         }
       }
       
       this.classes.find(obj => {
         return obj.id === id 
-      })[modalName] = newValue
-
-      this.$refs[modalName + id][0].classList.add('ion-valid');
+      })[modalName] = Number(newValue)
     }
   },
   setup() {

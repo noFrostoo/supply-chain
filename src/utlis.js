@@ -4,10 +4,10 @@ export const utils = {
         let nextId = 1;
         let maxClassNum = 0;
         let classes = [];
-        print("lobby.settings.user_classes")
+        console.log(lobby.settings.user_classes)
         for (let uClass of lobby.settings.user_classes) {
-            print(uClass)
-            classes.push({
+            console.log(uClass)
+            let c = {
                 id: nextId,
                 class: uClass,
                 startMoney: lobby.settings.start_money[uClass],
@@ -19,21 +19,24 @@ export const utils = {
                 backOrderCost: lobby.settings.back_order_cost[uClass],
                 additionalCost: lobby.settings.additional_cost[uClass],
                 startQueue: lobby.settings.start_order_queue[uClass],
-                })
+            }
+            console.log(c)
+            classes.push(c)
             nextId += 1
             if (uClass > maxClassNum) maxClassNum=uClass;
         }
+        console.log("parsed classes", classes)
         return {classes, nextId, maxClassNum}
     },
     toTemplateApi(template, classes) {
         console.log("parsing tempalte", template, classes)
         let settings = {
-            demand_style: template.settings.demand,
-            supply_style: template.settings.supply,
-            max_rounds: template.maxRounds,
-            show_stats_for_users: template.showStats,
-            unlimited_money: template.unlimitedMoney,
-            resource_basic_price: template.resourceBasicPrice,
+            demand_style: template.settings.demand_style,
+            supply_style: template.settings.supply_style,
+            max_rounds: template.settings.max_rounds,
+            show_stats_for_users: template.settings.show_stats_for_users,
+            unlimited_money: template.settings.unlimited_money,
+            resource_basic_price: template.settings.resource_basic_price,
             user_classes: [],
             start_order_queue: {},
             resource_price: {},
@@ -46,7 +49,9 @@ export const utils = {
             additional_cost: {},
           };
     
-          for (let uClass in classes) {
+          for (let uClass of classes) {
+            console.log(uClass)
+            console.log(uClass.startQueue)
             settings.user_classes.push(uClass.class);
             settings.start_order_queue[uClass.class] = uClass.startQueue
             settings.resource_price[uClass.class] = uClass.resourcePrice

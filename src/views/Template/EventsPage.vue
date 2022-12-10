@@ -40,7 +40,7 @@ export default defineComponent({
   data() {
     let template = this.$store.getters["template"]
     if (template) {
-      events = template.events
+      events = template.events.events
     } else {
       this.$store.dispatch("alert", "Problem with getting events")
     }
