@@ -35,7 +35,14 @@ export default  defineComponent({
   },
   computed: {
     lobby() {
-      return this.$store.getters['lobby']
+      let lobby = this.$store.getters["lobby"]
+      if (lobby) {
+        console.log("got lobby", lobby)
+      } else {
+        console.log("lobby",lobby)
+        this.$store.dispatch("alert", "Problem with getting lobby")
+      }
+      return lobby
     }
   }
 })

@@ -69,4 +69,14 @@ export const utils = {
           console.log("template parsed: ", template)
           return template
     },
+    removeEmpty(obj) {
+        return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null));
+    },
+    removeEmptyRecursive(obj) {
+        return Object.fromEntries(
+          Object.entries(obj)
+            .filter(([_, v]) => v != null)
+            .map(([k, v]) => [k, v === Object(v) ? this.removeEmpty(v) : v])
+        );
+    }
 }

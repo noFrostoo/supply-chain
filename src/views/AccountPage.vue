@@ -21,18 +21,18 @@
             <ion-label position="floating">New password</ion-label>
             <ion-input v-model="password"></ion-input>
           </ion-item>
-          <ion-button>Change password</ion-button>
+          <ion-button @click="changePassword">Change password</ion-button>
         </div>
       </ion-content>
     </ion-page>
   </ion-page>
 </template>
   
-  <script lang="ts">
+  <script>
   import { defineComponent } from 'vue';
   import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
   import MenuWidget from '@/components/MenuWidget.vue';
-  
+  import { api } from '@/api';
   
   export default defineComponent({
     name: 'ControlPage',
@@ -41,6 +41,16 @@
         return {
             password: ""
         }
+    },
+    methods: {
+      changePassword() {
+        try {
+          let response = api.updateUser(this.$store.getters["token"], this.$store.getters["id"], { password:  this.password})
+        }
+        catch (e) {
+          this.$store.dispatch("alert", "Problem with changing password");
+        }
+      }
     }
   });
   </script>

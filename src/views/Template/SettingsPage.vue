@@ -43,6 +43,7 @@ export default  defineComponent({
   methods: {
     update(template) {
       this.$store.dispatch("updateTemplate", template)
+      this.$store.dispatch("toast", "Saved")
     },
   },
   // setup() {

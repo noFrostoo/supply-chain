@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import { userModule } from './user';
 import {alertController, toastController} from "@ionic/vue";
 import { api } from '@/api';
+import { utils } from '@/utlis'
 
 export default createStore({
   state: {
@@ -129,7 +130,11 @@ export default createStore({
 
       await toast.present();
     },
-    async connectPlayer(context, id) {
+    async connectPlayer(context, id, password=null) {
+      //TODO, handle error
+      await api.connect(context.getters["token"], context.getters["id"], id, password)
+      context.commit("setGameId", id)
+      //TODO: handle ws
       console.log("connect player", id)
     },
     async quickConnect(context, code) {
@@ -152,9 +157,9 @@ export default createStore({
     async deleteLobby(context) {
       console.log("deleting lobby")
     },
-    async updateTemplate(context, payload) {
-      console.log("update template", payload)
-      context.state.template = await (await api.modifyTemplate(context.getters["token"], payload.id, payload)).data
+    async updateTemplate(context) {
+      console.log("update template", context.state.template)
+      context.state.template = await (await api.modifyTemplate(context.getters["token"], context.state.template.id, context.state.template)).data
       return context.state.template
     },
     async createTemplate(context) {
@@ -168,11 +173,29 @@ export default createStore({
       context.state.newTemplate = false
     },
     async updateTemplateEvents(context, payload) {
-      context.state.template.events.events = payload
+      let events = []
+      for (let event of payload) {
+        let actions = []
+        for (let action of event.actions) {
+          let fAction = utils.removeEmptyRecursive(action)
+          actions.push(fAction)
+        }
+        let filtered = utils.removeEmpty(event)
+        filtered.actions = actions
+        console.log(filtered)
+        events.push(filtered)
+      }
+      context.state.template.events.events = events
       console.log("update template events")
     },
     async updateLobbyEvents(context, payload) {
-      context.state.lobby.events.events = payload
+      let events = []
+      for (let event of payload) {
+        let filtered = utils.removeEmpty(event)
+        console.log(filtered)
+        events.push(filtered)
+      }
+      context.state.lobby.events.events = events
       console.log("update lobby events")
     },
     async fetchLobby(context, id) {

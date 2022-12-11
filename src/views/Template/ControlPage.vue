@@ -51,7 +51,8 @@
             let template = await this.$store.dispatch("updateTemplate")
         },
         async deleteTemplate() {
-            let template = await this.$store.dispatch("updateTemplate")
+            this.$store.dispatch("deleteTemplate")
+            this.router.push(`/yourtemplates`)
         },
         async createLobby() {
             let template = await this.$store.dispatch("updateTemplate")

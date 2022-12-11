@@ -35,7 +35,7 @@ export default defineComponent({
     async updateEvents(events){
       console.log("events: ", events)
       this.events = events;
-      await this.$store.dispatch("updateLobbyEvents", events)
+      await this.$store.dispatch("updateTemplateEvents", events)
     }
   },
   data() {

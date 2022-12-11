@@ -48,7 +48,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-select v-model="eventEditing.conditionName" interface="action-sheet" placeholder="Select condition">
+              <ion-select v-model="eventEditing.condition.type" interface="action-sheet" placeholder="Select condition">
                 <ion-select-option value="RoundMet">Round</ion-select-option>
                 <ion-select-option value="ValueExceed">Value Exceeded</ion-select-option>
                 <ion-select-option value="SingleChange">Single value change</ion-select-option>
@@ -56,13 +56,13 @@
             </ion-item>
 
             <!-- condition 1 round med -->
-            <ion-item v-if="eventEditing.conditionName == 'RoundMet'">
+            <ion-item v-if="eventEditing.condition.type == 'RoundMet'">
               <ion-label position="floating">Round </ion-label>
-              <ion-input v-model="eventEditing.condition.round"  type="number"></ion-input>
+              <ion-input v-model.number="eventEditing.condition.round"  type="number"></ion-input>
             </ion-item>
 
             <!-- condition 2 value exceed  and single change-->
-            <ion-item v-if="eventEditing.conditionName == 'ValueExceed' || eventEditing.conditionName == 'SingleChange' " >
+            <ion-item v-if="eventEditing.condition.type == 'ValueExceed' || eventEditing.condition.type == 'SingleChange' " >
               <ion-select v-model="eventEditing.condition.resource" interface="action-sheet" placeholder="Select resource">
                 <ion-select-option value="Money">Money</ion-select-option>
                 <ion-select-option value="MagazineState">Magazine State</ion-select-option>
@@ -70,33 +70,20 @@
                 <ion-select-option value="BackOrderValue">Back Order Value</ion-select-option>
               </ion-select>
             </ion-item>
-            <ion-item v-if="eventEditing.conditionName == 'ValueExceed' || eventEditing.conditionName == 'SingleChange' ">
+            <ion-item v-if="eventEditing.condition.type == 'ValueExceed' || eventEditing.condition.type == 'SingleChange' ">
               <ion-label position="floating">Value </ion-label>
-              <ion-input v-model="eventEditing.condition.value" type="number" ></ion-input>
+              <ion-input v-model.number="eventEditing.condition.value" type="number" ></ion-input>
             </ion-item>
 
             <!-- just cond 2-->
-            <ion-item v-if="eventEditing.conditionName == 'ValueExceed'" >
-              <ion-select v-model="eventEditing.condition.metBy" interface="action-sheet" placeholder="Met by">
+            <ion-item v-if="eventEditing.condition.type == 'ValueExceed'" >
+              <ion-select v-model="eventEditing.condition.met_by" interface="action-sheet" placeholder="Met by">
                 <ion-select-option value="SinglePlayer">Single Player</ion-select-option>
-                <ion-select-option value="PlayerPercent">Player Percent</ion-select-option>
                 <ion-select-option value="Average">Average</ion-select-option>
                 <ion-select-option value="AllPlayers">All Players</ion-select-option>
               </ion-select>
             </ion-item>
-            <ion-item v-if="eventEditing.conditionName == 'ValueExceed' && eventEditing.condition.metBy == 'PlayerPercent' ">
-              <ion-label position="floating">Percentage </ion-label>
-              <ion-input v-model="eventEditing.conditionName.playerPercentage" type="number" ></ion-input>
-            </ion-item>
-
-            <ion-item>
-              <ion-select v-model="eventEditing.recipients" interface="action-sheet" placeholder="Select recipients">
-                <ion-select-option value="SinglePlayer">Single player</ion-select-option>
-                <ion-select-option value="PlayerMetConditions">Player who met condition</ion-select-option>
-                <ion-select-option value="AllPlayers">All players</ion-select-option>
-              </ion-select>
-            </ion-item>
-
+  
             <ion-item>
               <ion-label position="fixed">Run Once</ion-label>
               <ion-checkbox v-model="eventEditing.run_once"></ion-checkbox>
@@ -158,8 +145,9 @@ let events = []
 let defaultEvent = {
   id: 0,
   name: null,
-  conditionName: null,
-  condition: {},
+  condition: {
+    type: null,
+  },
   actions: [],
   recipients: null,
   run_once: true
@@ -170,6 +158,7 @@ export default defineComponent({
   props: ["updateEvents", "initialEvents"],
   components: { IonList, IonItem, IonCheckbox, IonAccordion, IonAccordionGroup, IonSelect, IonLabel, IonInput, IonFab, IonButton, IonButtons, IonFabButton, IonIcon, IonSelectOption, IonHeader, IonToolbar, IonModal, IonTitle, IonContent },
   data() {
+
     if (this.initialEvents !== undefined) {
       events = this.initialEvents
     }
@@ -246,7 +235,7 @@ export default defineComponent({
       this.updateEvents(this.events)
     },
     addAction() {
-      let action = {...this.defaultAction}
+      let action = this.defaultAction
       action.id = this.nextActionID
       this.nextActionID += 1
       this.eventEditing.actions.push(action)

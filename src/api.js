@@ -86,26 +86,31 @@ export const api = {
     return axios.delete(`${APISUFFIX}/template/${id}`, authHeaders(token));
   },
 
-  async fetchLobbies(token) {
-    return axios.get(`${APISUFFIX}/template`, authHeaders(token));
+  async fetchLobbies(token, type, limit, offset) {
+    return axios.get(`${APISUFFIX}/lobby?lobby_type=${type}&limit=${limit}&offset=${offset}`, authHeaders(token));
   },
 
   async fetchLobby(token, id) {
-    return axios.get(`${APISUFFIX}/Lobby/${id}`, authHeaders(token));
+    return axios.get(`${APISUFFIX}/lobby/${id}`, authHeaders(token));
   },
 
   async createLobby(token, data) {
-    return axios.post(`${APISUFFIX}/Lobby`, data, authHeaders(token));
+    return axios.post(`${APISUFFIX}/lobby`, data, authHeaders(token));
   },
 
   async modifyLobby(token, id, data) {
-    return axios.put(`${APISUFFIX}/Lobby/${id}`, data, authHeaders(token));
+    return axios.put(`${APISUFFIX}/lobby/${id}`, data, authHeaders(token));
   },
 
   async deleteLobby(token, id) {
-    return axios.delete(`${APISUFFIX}/Lobby/${id}`, authHeaders(token));
-  }
+    return axios.delete(`${APISUFFIX}/lobby/${id}`, authHeaders(token));
+  },
 
+  async connect(token, userId, gameId, password=null) {
+    if (password != null)
+      return axios.put(`${APISUFFIX}/user/${userId}/connect?game_id=${gameId}&password=${password}`, authHeaders(token));
+    return axios.put(`${APISUFFIX}/user/${userId}/connect?game_id=${gameId}`, authHeaders(token));
+  },
 
 
 };
