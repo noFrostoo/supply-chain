@@ -11,7 +11,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content :fullscreen="true">
-        <SettingsTab :initlobby="lobby" :update="update" :isTemplate="false" />
+        <SettingsTab :initLobby="lobby" :update="update" :isTemplate="false" />
       </ion-content>
     </ion-page>
   </ion-page>
@@ -33,18 +33,19 @@ export default  defineComponent({
       this.$store.dispatch("toast", "Saved")
     },
   },
-  computed: {
-    lobby() {
-      let lobby = this.$store.getters["lobby"]
-      if (lobby) {
-        console.log("got lobby", lobby)
-      } else {
-        console.log("lobby",lobby)
-        this.$store.dispatch("alert", "Problem with getting lobby")
-      }
-      return lobby
+  data() {
+    let lobby = this.$store.getters["lobby"]
+    if (lobby) {
+      console.log("got lobby", lobby)
+    } else {
+      console.log("lobby",lobby)
+      this.$store.dispatch("alert", "Problem with getting lobby")
     }
-  }
+
+    return {
+      lobby
+    }
+  },
 })
 </script>
 

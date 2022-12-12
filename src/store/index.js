@@ -10,12 +10,17 @@ export default createStore({
     newTemplate: false,
     lobby: null,
     newLobby: false,
+    players: [],
+    userClasses: null,
+    lobbyOwner: null,
   },
   getters: {
     template: (state) => state.template,
     lobby: (state) => state.lobby,
     isNewTemplate: (state) => state.newTemplate,
     isNewLobby: (state) => state.newLobby,
+    players: (state) => state.players,
+    userClasses: (state) => state.userClasses
   },
   mutations: {
     setTemplate(state, payload) {
@@ -30,6 +35,12 @@ export default createStore({
     resetNewLobby(state) {
       console.log("reseting new lobby")
       state.newLobby = false
+    },
+    addDefaultClass(state) {
+      state.lobby.settings.user_classes.push(1)
+    },
+    setUserClasses(state, payload) {
+      state.userClasses = payload
     },
     startCreatingTemplate(state) {
       console.log("creating new template")
@@ -200,8 +211,11 @@ export default createStore({
     },
     async fetchLobby(context, id) {
       console.log("Fetching lobby")
-      let lobby = await (await api.fetchLobby(context.getters["token"], id)).data
-      context.state.lobby = lobby
+      let lobbyResponse = await (await api.fetchLobby(context.getters["token"], id)).data
+      console.log("lobby response", lobbyResponse)
+      context.state.lobby = lobbyResponse.lobby
+      context.state.players = lobbyResponse.players
+      context.state.lobbyOwner = lobbyResponse.owner
       context.state.newLobby = false
       return context.state.lobby
     },

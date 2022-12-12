@@ -40,46 +40,52 @@ import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonList, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonMenuButton, IonButtons, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 
-let players = [
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-          {
-            id: "XD",
-            username: "user1",
-            class: 1
-          },
-
-        ];
+let players = [];
 
 export default defineComponent({
   name: 'PlayersPage',
   components: { MenuWidget, IonHeader, IonList, IonButton,IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage },
   data() {
+    players = this.$store.getters["players"]
+
+    if (!players) {
+        this.$store.dispatch("alert", "problem with getting players")
+        return {players: [], user_classes: {}}
+    } 
+
+    userClasses = this.$store.getters["userClasses"]
+    if (userClasses) {
+      return {
+        players: players,
+        user_classes: userClasses
+      }
+    }
+
+    let lobby = this.$store.getters["lobby"]
+    
+    if (!lobby) {
+      this.$store.dispatch("alert", "problem with getting lobby")
+      return {players: []}
+    }
+
+    let classes = lobby.settings.user_classes
+
+    if (classes.length() == 0) {
+        this.$store.commit("addDefaultClass")
+        classes = this.$store.getters["lobby"]
+    }
+
+    lobby = this.$store.getters["lobby"]
+    classes = lobby.settings.user_classes
+    firstClass = classes[0]
+
+    for (p of players) {
+      userClasses[p.id] = firstClass
+    }
+    
     return {
-      players: players
+      players: players,
+      user_classes: userClasses
     }
   },
   setup() {

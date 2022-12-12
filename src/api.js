@@ -108,8 +108,8 @@ export const api = {
 
   async connect(token, userId, gameId, password=null) {
     if (password != null)
-      return axios.put(`${APISUFFIX}/user/${userId}/connect?game_id=${gameId}&password=${password}`, authHeaders(token));
-    return axios.put(`${APISUFFIX}/user/${userId}/connect?game_id=${gameId}`, authHeaders(token));
+      return axios.put(`${APISUFFIX}/users/${userId}/connect?game_id=${gameId}&password=${password}`, null, authHeaders(token));
+    return axios.put(`${APISUFFIX}/users/${userId}/connect?game_id=${gameId}`, null, authHeaders(token));
   },
 
 
