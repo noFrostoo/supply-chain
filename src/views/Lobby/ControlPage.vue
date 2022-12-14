@@ -17,12 +17,17 @@
           </ion-toolbar>
         </ion-header>
         <div class="container">
-          <ion-button v-if="isNewLobby" @click="createLobby" style="margin:5px" >Create lobby</ion-button>
-          <ion-button v-if="!isNewLobby" @click="startGame" style="margin:5px" >Start game</ion-button>
-          <ion-button @click="saveAsTemplate" style="margin:5px" >Save as template</ion-button>
-          <ion-button v-if="!isNewLobby" @click="deleteLobby" style="margin:5px" >Delete Lobby</ion-button>
-          <ion-button v-if="!isNewLobby" @click="generateConnectCode"  style="margin:5px" >Generate connect code </ion-button>
+          <ion-button v-if="isNewLobby && !saveTemplate" @click="createLobby" style="margin:5px" >Create lobby</ion-button>
+          <ion-button v-if="!isNewLobby && !saveTemplate " @click="startGame" style="margin:5px" >Start game</ion-button>
+          <ion-button v-if="!saveTemplate" @click="startSavingTemplate" style="margin:5px" >Save as template</ion-button>
+          <ion-button v-if="saveTemplate" @click="performSavingTemplate" style="margin:5px" >Click again to save as template</ion-button>
+          <ion-button v-if="!isNewLobby && !saveTemplate" @click="deleteLobby" style="margin:5px" >Delete Lobby</ion-button>
+          <ion-button v-if="!isNewLobby && !saveTemplate" @click="generateConnectCode"  style="margin:5px" >Generate connect code </ion-button>
         </div>
+        <ion-item  v-if="saveTemplate">
+              <ion-label position="floating">Enter Name</ion-label>
+              <ion-input v-model="templateName"></ion-input>
+        </ion-item>
       </ion-content>
     </ion-page>
   </ion-page>
@@ -30,13 +35,13 @@
 
 <script lang="js">
 import { defineComponent } from 'vue';
-import { IonPage, IonButton,  IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonButton, IonItem, IonLabel, IonInput, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 import { useIonRouter } from '@ionic/vue';
 
 export default defineComponent({
   name: 'ControlPage',
-  components: { MenuWidget, IonButton, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  components: { MenuWidget, IonButton, IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   methods: {
     async createLobby(){
       let lobby = await this.$store.dispatch("createLobby")
@@ -51,8 +56,12 @@ export default defineComponent({
     async startGame() {
       await this.$store.dispatch("startGame")
     },
-    async saveAsTemplate() {
-      console.log("save as template")
+    async startSavingTemplate() {
+      this.saveTemplate = true
+    },
+    async performSavingTemplate() {
+      //TODO: save 
+      this.saveTemplate = false
     },
     async generateConnectCode() {
       console.log("generate connect code")
@@ -65,7 +74,9 @@ export default defineComponent({
   },
   data() {
     return {
-      router: useIonRouter()
+      router: useIonRouter(),
+      saveTemplate: false,
+      templateName: ""
     }
   }
 });

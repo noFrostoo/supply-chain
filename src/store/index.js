@@ -42,6 +42,19 @@ export default createStore({
     setUserClasses(state, payload) {
       state.userClasses = payload
     },
+    leaveTemplate(state) {
+      console.log("leaving template")
+      state.template = null
+      state.newTemplate = false
+    },
+    leaveLobby(state) {
+      console.log("leaving lobby")
+      state.lobby = null
+      state.players = null
+      state.lobbyOwner = null
+      state.userClasses = null
+      state.newLobby = false
+    },
     startCreatingTemplate(state) {
       console.log("creating new template")
       state.newTemplate = true
@@ -167,6 +180,11 @@ export default createStore({
     },
     async deleteLobby(context) {
       console.log("deleting lobby")
+      context.state.lobby = null
+      context.state.players = null
+      context.state.lobbyOwner = null
+      context.state.newLobby = false
+      context.state.userClasses = null
     },
     async updateTemplate(context) {
       console.log("update template", context.state.template)
