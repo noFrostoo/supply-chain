@@ -11,7 +11,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <EventTab :updateEvents="updateEvents" :initialEvents="events" />
+      <EventTab :updateEvents="updateEvents" :initialEvents="events" :lobby="template" />
 
     </ion-content>
   </ion-page>
@@ -26,6 +26,7 @@ import MenuWidget from '@/components/MenuWidget.vue';
 import EventTab from '@/components/EventsTab.vue'
 
 let events = []
+let template = {}
 
 export default defineComponent({
   name: 'EventPage',
@@ -38,8 +39,8 @@ export default defineComponent({
     }
   },
   data() {
-    let template = this.$store.getters["template"]
-    if (template) {
+    if (this.$store.getters["template"]) {
+      template = this.$store.getters["template"]
       events = template.events.events
     } else {
       this.$store.dispatch("alert", "Problem with getting events")

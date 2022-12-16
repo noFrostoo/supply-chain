@@ -5,7 +5,7 @@
       <ion-content fullscreen scroll-y="false">
       <!-- <ion-header collapse="condense"> -->
         <ion-header>
-          <ion-toolbar>
+          <ion-toolbar content-id="main-content">
             <ion-buttons  slot="start">
               <ion-menu-button></ion-menu-button>
             </ion-buttons>

@@ -447,6 +447,7 @@ export default {
   components: {IonHeader, IonIcon, IonSelect,IonFab, IonFabButton, IonSelectOption , IonToolbar, IonTitle, IonItem, IonButton, IonButtons, IonList, IonCard, IonCheckbox, IonContent, IonModal, IonGrid, IonRow, IonCol, IonLabel, IonInput, },  
   data() {
     lobby = this.initLobby;
+    console.log("received lobby", lobby)
     let {classes, nextId, maxClassNum} = utils.parseClasses(lobby)
     console.log("lobby: ", lobby, ", innitLobby", this.initLobby, "update", this.update, "isTemplate", this.isTemplate, "classes", classes)
 

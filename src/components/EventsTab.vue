@@ -21,7 +21,7 @@
         </ion-fab>
 
 
-        <ion-modal ref="modal" :is-open="isOpen">
+        <ion-modal class="event-modal" ref="modal" :is-open="isOpen">
         <ion-header>
           <ion-toolbar>
             <ion-title>Event</ion-title>
@@ -39,7 +39,7 @@
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content :fullscreen="true" class="ion-padding">
           <ion-list>
 
             <ion-item>
@@ -127,10 +127,15 @@
                 <ion-input v-model="action.value" type="number"></ion-input>
               </ion-item>
 
+              <div class="ion-padding" v-if="action.type == 'ChangeSettings'" slot="content">
+                 <SettingsTab class="settings-item" :initLobby="newLobby" :update="saveNewLobby" :isTemplate="true" />
+              </div>  
+
             </ion-accordion>
           </ion-accordion-group>
 
           </ion-list>
+          
         </ion-content>
       </ion-modal>
 </template>
@@ -139,6 +144,7 @@
 import { defineComponent } from 'vue';
 import { IonCheckbox, IonAccordion,  IonAccordionGroup, IonList, IonItem, IonLabel, IonInput, IonButton, IonButtons, IonFab, IonFabButton, IonIcon,  IonSelect, IonSelectOption , IonHeader, IonModal, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import { add } from 'ionicons/icons';
+import SettingsTab from '@/components/SettingsTab.vue';
 
 let events = []
 
@@ -155,14 +161,19 @@ let defaultEvent = {
 
 export default defineComponent({
   name: 'EventTab',
-  props: ["updateEvents", "initialEvents"],
-  components: { IonList, IonItem, IonCheckbox, IonAccordion, IonAccordionGroup, IonSelect, IonLabel, IonInput, IonFab, IonButton, IonButtons, IonFabButton, IonIcon, IonSelectOption, IonHeader, IonToolbar, IonModal, IonTitle, IonContent },
+  props: ["updateEvents", "initialEvents", "lobby"],
+  components: { IonList, IonItem, SettingsTab, IonCheckbox, IonAccordion, IonAccordionGroup, IonSelect, IonLabel, IonInput, IonFab, IonButton, IonButtons, IonFabButton, IonIcon, IonSelectOption, IonHeader, IonToolbar, IonModal, IonTitle, IonContent },
   data() {
 
     if (this.initialEvents !== undefined) {
       events = this.initialEvents
     }
-  
+    
+    let newLobby = {}
+    if (this.lobby !== undefined) {
+      newLobby = {...this.lobby}
+    }
+
     return {
       events,
       isOpen: false,
@@ -179,6 +190,7 @@ export default defineComponent({
       nextActionID: 1,
       nextEventID: 1,
       editing: false,
+      newLobby: newLobby
     }
   },
   setup() {
@@ -240,6 +252,9 @@ export default defineComponent({
       this.nextActionID += 1
       this.eventEditing.actions.push(action)
       this.updateEvents(this.events)
+    },
+    saveNewLobby(lobby) {
+      this.newLobby = lobby
     }
   }
 
@@ -254,4 +269,12 @@ export default defineComponent({
   justify-content: center;
   background:brown;
 }
+.event-modal .modal-wrapper {
+  width: 100%;
+  height: 100%;
+}
+.settings-item {
+  height: 500 px;
+}
+
 </style>

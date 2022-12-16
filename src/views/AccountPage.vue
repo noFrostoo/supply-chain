@@ -30,13 +30,13 @@
   
   <script>
   import { defineComponent } from 'vue';
-  import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+  import { IonPage, IonHeader, IonMenuButton, IonItem, IonButton, IonInput, IonButtons, IonLabel, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
   import MenuWidget from '@/components/MenuWidget.vue';
   import { api } from '@/api';
   
   export default defineComponent({
     name: 'ControlPage',
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, MenuWidget },
+    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, MenuWidget, IonLabel, IonMenuButton, IonItem, IonButton, IonInput, IonButtons, },
     data() {
         return {
             password: ""

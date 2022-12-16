@@ -3,7 +3,7 @@
   <MenuWidget/>
   <ion-page id="main-content" >
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar content-id="main-content" >
         <ion-buttons  slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
@@ -11,7 +11,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <EventTab :updateEvents="updateEvents" :initialEvents="events" />
+      <EventTab :updateEvents="updateEvents" :initialEvents="events" :lobby="lobby" />
 
     </ion-content>
   </ion-page>
