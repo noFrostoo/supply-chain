@@ -3,6 +3,7 @@ import { userModule } from './user';
 import {alertController, toastController} from "@ionic/vue";
 import { api } from '@/api';
 import { utils } from '@/utlis'
+import { createWebSockets } from '@/ws';
 
 export default createStore({
   state: {
@@ -13,6 +14,7 @@ export default createStore({
     players: [],
     userClasses: null,
     lobbyOwner: null,
+    ws: null
   },
   getters: {
     template: (state) => state.template,
@@ -23,6 +25,12 @@ export default createStore({
     userClasses: (state) => state.userClasses
   },
   mutations: {
+    setWs(state, ws) {
+      state.ws = ws
+    },
+    setPlayer(state, payload) {
+      state.players = payload
+    },
     setTemplate(state, payload) {
       state.template = payload
     },
@@ -158,7 +166,7 @@ export default createStore({
       //TODO, handle error
       await api.connect(context.getters["token"], context.getters["id"], id, password)
       context.commit("setGameId", id)
-      //TODO: handle ws
+      context.commit("setWs", createWebSockets(context.getters["token"])) 
       console.log("connect player", id)
     },
     async quickConnect(context, code) {
@@ -171,7 +179,10 @@ export default createStore({
     async createLobby(context) {
       console.log("create lobby")
       //TODO: handle error
-      let template = await (await api.createLobby(context.getters["token"], context.state.lobby)).data
+      let lobbyResponse = await (await api.createLobby(context.getters["token"], context.state.lobby)).data
+      context.state.lobby = lobbyResponse.lobby
+      context.state.players = lobbyResponse.players
+      context.state.lobbyOwner = lobbyResponse.owner
       context.state.newLobby = false
       return context.state.lobby
     },

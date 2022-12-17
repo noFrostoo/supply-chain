@@ -128,7 +128,7 @@
               </ion-item>
 
               <div class="ion-padding" v-if="action.type == 'ChangeSettings'" slot="content">
-                 <SettingsTab class="settings-item" :initLobby="newLobby" :update="saveNewLobby" :isTemplate="true" />
+                <ion-button slot="content" expand="block" @click="openSettingsChangeModal(action)">Open modal editor</ion-button>
               </div>  
 
             </ion-accordion>
@@ -137,6 +137,20 @@
           </ion-list>
           
         </ion-content>
+      </ion-modal>
+
+      <ion-modal class="settings-modal" ref="settingsModal" :is-open="settingsModalOpen">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Settings</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="setSettingsModalOpen(false)">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content :fullscreen="true" class="ion-padding">
+          <SettingsTab class="settings-item" :initLobby="newLobby" :update="saveNewLobby" :isTemplate="true" />
+        </ion-content>  
       </ion-modal>
 </template>
 
@@ -190,7 +204,9 @@ export default defineComponent({
       nextActionID: 1,
       nextEventID: 1,
       editing: false,
-      newLobby: newLobby
+      newLobby: newLobby,
+      settingsModalOpen: false,
+      settingsChangeAction: null,
     }
   },
   setup() {
@@ -200,6 +216,9 @@ export default defineComponent({
     setOpen(open) {
       this.isOpen = open
     },
+    setSettingsModalOpen(open) {
+      this.settingsModalOpen = open
+    },  
     newEvent() {
       this.eventEditing = {...this.defaultEvent}
       this.eventEditing.id = this.nextEventID
@@ -254,7 +273,15 @@ export default defineComponent({
       this.updateEvents(this.events)
     },
     saveNewLobby(lobby) {
+      this.settingsChangeAction.new_settings = lobby.settings
       this.newLobby = lobby
+      this.settingsModalOpen = false
+      let index = this.eventEditing.actions.find(obj => obj.id === this.settingsChangeAction.id);
+      this.eventEditing.actions[index] = this.settingsChangeAction
+    },
+    openSettingsChangeModal(action) {
+      this.settingsChangeAction = action
+      this.settingsModalOpen = true
     }
   }
 
@@ -263,18 +290,14 @@ export default defineComponent({
   
 
 <style>
-.grid-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:brown;
-}
 .event-modal .modal-wrapper {
   width: 100%;
   height: 100%;
 }
-.settings-item {
-  height: 500 px;
+
+.settings-modal .modal-wrapper {
+  width: 100%;
+  height: 100%;
 }
 
 </style>

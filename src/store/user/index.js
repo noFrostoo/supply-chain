@@ -1,4 +1,6 @@
 import { api } from '@/api';
+import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { Drivers, Storage } from '@ionic/storage';
 
 const defaultState = {
     isLoggedIn: null,
@@ -21,7 +23,7 @@ export const actions = {
             const token = response.data.access_token;
             console.log("token", token);
             if (token) {
-                saveLocalToken(token);
+                await saveLocalToken(token);
                 context.commit("setToken", token);
                 context.commit("setLoggedIn", true)
                 context.commit("setLogInError", false)
@@ -56,7 +58,7 @@ export const actions = {
         if (!context.state.isLoggedIn) {
             let token = context.state.token;
             if (!token) {
-                const localToken = getLocalToken();
+                const localToken = await getLocalToken();
                 if (localToken) {
                     context.commit("setToken", localToken);
                     token = localToken;
@@ -64,6 +66,7 @@ export const actions = {
             }
             if (token) {
                 try {
+                    console.log("token", token)
                     const isLoggedIn = await context.dispatch("actionGetMe");
                     context.commit("setLoggedIn", isLoggedIn);
                     if (!isLoggedIn) {
@@ -74,14 +77,15 @@ export const actions = {
                     await context.dispatch("toast", "Not logged in");
                 }
             } else {
-                await context.dispatch("actionLogOut");
+                context.commit("setToken", '');
+                context.commit("setLoggedIn", false);
                 await context.dispatch("toast", "Not logged in");
             }
         }
     },
 
     async actionLogOut(context) {
-        removeLocalToken();
+        await removeLocalToken();
         context.commit("setToken", '');
         context.commit("setLoggedIn", false);
         await context.dispatch("alert", "Logged out");
@@ -197,8 +201,14 @@ const setUserData = (context, data) => {
     context.commit("setGameId", data.game_id)
 }
 
-export const getLocalToken = () => localStorage.getItem('token');
+const storage = new Storage({
+    driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage, CordovaSQLiteDriver._driver,]
+});
 
-const saveLocalToken = (token) => localStorage.setItem('token', token);
+storage.create()
 
-const removeLocalToken = () => localStorage.removeItem('token');
+export const getLocalToken = async () => await storage.get('token');
+
+const saveLocalToken = async (token) => await storage.set('token', token);
+
+const removeLocalToken = async () => await storage.remove('token');

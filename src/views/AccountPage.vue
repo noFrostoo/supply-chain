@@ -50,6 +50,9 @@
         catch (e) {
           this.$store.dispatch("alert", "Problem with changing password");
         }
+        finally {
+          this.$store.dispatch("toast", "Password changed");
+        }
       }
     }
   });
