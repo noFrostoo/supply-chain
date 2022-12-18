@@ -44,6 +44,31 @@ export const createWebSockets = (token) => {
     else if ( event.UserDisconnected !== undefined ) {
       store.commit("setPlayer", event.UserDisconnected.users)
     }
+    else if ( event.LobbyUpdate !== undefined ) {
+      store.commit("setPlayer", event.LobbyUpdate.users)
+      store.commit("setLobby", event.LobbyUpdate.lobby)
+    }
+    else if ( event.Error !== undefined ) {
+      store.dispatch("alert", event.Error)
+    }
+    else if ( event.RoundStart !== undefined ) {
+      store.dispatch("startGame", event.Error)
+    }
+    else if ( event.RoundEnd !== undefined ) {
+      store.dispatch("startGame", event.Error)
+    }
+    else if ( event.GameStart !== undefined ) {
+      store.dispatch("startGame", event.Error)
+    }
+    else if ( event.GameEventSettingsChange !== undefined ) {
+      store.commit("setSettings", event.GameEventSettingsChange)
+    }
+    else if ( event.GameEventPopUp !== undefined ) {
+      console.log(event.GameEventPopUp)
+    }
+    else if ( event.GameEventResource !== undefined ) {
+      console.log(event.GameEventResource)
+    }
 
   };
 

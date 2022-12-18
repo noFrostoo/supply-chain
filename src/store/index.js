@@ -37,6 +37,9 @@ export default createStore({
     setLobby(state, payload) {
       state.lobby =  payload
     },
+    setSettings(state, payload) {
+      state.lobby.settings = payload
+    },
     resetNewTemplate(state) {
       state.newTemplate = false
     },
