@@ -159,8 +159,15 @@ export default createStore({
     async toast(context, text) {
       const toast = await toastController.create({
         message: text,
-        duration: 1500,
-        position: 'middle'
+        duration: 3500,
+        position: 'top',
+        buttons: [
+          {
+            text: 'Dismiss',
+            role: 'cancel',
+            handler: () => { this.handlerMessage = 'Dismiss clicked'; }
+          }
+        ]
       });
 
       await toast.present();
@@ -177,6 +184,10 @@ export default createStore({
     },
     async updateLobby(context, payload) {
       context.state.lobby = payload
+      let lobbyResponse = await (await api.modifyLobby(context.getters["token"], context.state.lobby.id, context.state.lobby)).data
+      context.state.lobby = lobbyResponse.lobby
+      context.state.players = lobbyResponse.players
+      context.state.lobbyOwner = lobbyResponse.owner
       console.log("update lobby ")
     },
     async createLobby(context) {
@@ -194,6 +205,7 @@ export default createStore({
     },
     async deleteLobby(context) {
       console.log("deleting lobby")
+      await api.deleteLobby(context.getters["token"], context.state.lobby.id)
       context.state.lobby = null
       context.state.players = null
       context.state.lobbyOwner = null
@@ -209,9 +221,11 @@ export default createStore({
       //TODO: handle error
       let template = await (await api.createTemplate(context.getters["token"], context.state.template)).data
       context.state.template = template
+      context.state.newTemplate = false
       return template
     },
     async deleteTemplate(context) {
+      await api.deleteTemplate(context.getters["token"], context.state.template.id)
       context.state.template = null
       context.state.newTemplate = false
     },

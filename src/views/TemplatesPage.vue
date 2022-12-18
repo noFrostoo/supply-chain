@@ -59,11 +59,13 @@
         this.router.push("/template/new/Settings")
       },
       async deleteTemplate(id) {
-
-        await this.fetchTemplates();
+        console.log("deleting template")
+        await api.deleteTemplate(this.$store.getters["token"], id)
+        this.templates = await (await api.fetchTemplates(this.$store.getters["token"])).data
       },
       async fetchTemplates() {
-        return await (await api.fetchTemplates(this.$store.getters["token"])).data
+        this.templates = await (await api.fetchTemplates(this.$store.getters["token"])).data
+        return this.templates
       },
     },
     data() {

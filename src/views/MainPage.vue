@@ -10,22 +10,15 @@
               <ion-menu-button></ion-menu-button>
             </ion-buttons>
             <ion-title>
-              <ion-searchbar style="width: 50%" animated="true" placeholder="Game name"></ion-searchbar>
+              <ion-searchbar @ionChange="handleChange($event)" style="width: 50%" animated="true" placeholder="Game name"></ion-searchbar>
             </ion-title>
           </ion-toolbar>
         </ion-header> 
         <ion-grid >
           <ion-col>
               <ion-row>
-                  <ion-col style="height:10%">
-                      <ion-row class="item" >
-                        
-                      </ion-row>
-                  </ion-col>
-              </ion-row>
-              <ion-row>
                 <ion-col>
-                  <GameList/>
+                  <GameList :query="query"/>
                 </ion-col>
               </ion-row>
           </ion-col>
@@ -36,7 +29,7 @@
 </template>
 
 <script lang="js">
-  import {IonButton, IonPage, IonButtons, IonHeader, IonSearchbar, IonTitle, IonMenu, IonMenuButton,IonToolbar ,IonContent, IonItem, IonGrid, IonRow, IonCol } from '@ionic/vue';
+  import { IonPage, IonButtons, IonHeader, IonSearchbar, IonTitle, IonMenuButton,IonToolbar ,IonContent, IonGrid, IonRow, IonCol } from '@ionic/vue';
   import GameList from "../components/GameList.vue"
   import MenuVue from '@/components/MenuWidget.vue';
 
@@ -56,11 +49,17 @@
       IonButtons,
       IonPage,
     },
-    data () {
+    data() {
       return {
-       
+        query: ""
       }
     },
+    methods: {
+      handleChange(event) {
+        this.query = event.target.value.toLowerCase();
+        console.log(this.query)
+      },
+    }
   }
 </script>
 

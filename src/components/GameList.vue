@@ -32,10 +32,6 @@
   import { api } from '@/api'
   import { useStore } from 'vuex'
 
-  let games = [
-
-        ];
-
   export default {
     components: {
       IonButton,
@@ -48,15 +44,25 @@
       IonCard
     },
     name: "GameList",
+    props: ["query"],
     methods: {
       async connect(id) {
         await this.$store.dispatch("connectPlayer", id)
         this.$store.dispatch("toast", "Connected")
         this.router.push(`/lobby/${id}/Players`)
+      },
+      filterFunc(query, items) {
+        console.log("xD")
+        if (query == "")
+          return items
+
+        const filterVal = query.toLowerCase();
+        let results = items.filter(d => d.name.toLowerCase().indexOf(filterVal) > -1);
+        console.log("filtered", results)
+        return results
       }
     },
-    setup() {
-      console.log("XDDD")
+    data() {
       const store = useStore()
       let pageSize = 25
 
@@ -64,32 +70,32 @@
       const toggleInfiniteScroll = () => {
         isDisabled.value = !isDisabled.value;
       }
-      const items = ref([]);
+
+      let items = ref([]);
+      let startOffset = 0
 
       const pushData = async () => {
         console.log("dafdfa")
-        const offset = items.value.length;
+        let offset = startOffset;
+        if (this.lastOffset !== undefined) {
+          offset = this.lastOffset;
+        }
         const limit = pageSize;
         let lobbies = await (await api.fetchLobbies(store.getters["token"], "Public", limit, offset)).data
-         
-        for (let lobby of lobbies) {
+        let filtered = this.filterFunc(this.query, lobbies)
+        this.lastOffset += filtered.length;
+
+        for (let lobby of filtered) {
           items.value.push(lobby);
         }
       }
       
       const loadData = (ev) => {
-        console.log("XD")
-        setTimeout(() => {
-          pushData();
-          console.log('Loaded data');
-          ev.target.complete();
-    
-          // App logic to determine if all data is loaded
-          // and disable the infinite scroll
-          if (items.value.length === 1000) {
-            ev.target.disabled = true;
-          }
-        }, 500);
+          pushData().then(() => {
+            console.log('Loaded data');
+            ev.target.complete();
+            ev.target.disabled = true
+          })
       }
     
     pushData();
@@ -98,14 +104,26 @@
       isDisabled,
       toggleInfiniteScroll,
       loadData,
+      pushData,
       items,
+      lastOffset: 0,
       router: useIonRouter()
     }
   },
-    data () {
-      return {
-      }
-    },
+  watch: {
+    query: function(newVal, oldVal){
+      console.log("newval", newVal, "oldval", oldVal)
+      if (newVal != oldVal) {
+          console.log("filtering")
+          this.lastOffset = 0
+          this.items = this.filterFunc(this.query, this.items)
+        }
+      this.pushData().then(() => {
+          console.log('Loaded data');
+        })
+    }
+  }
+  
   }
 </script>
 

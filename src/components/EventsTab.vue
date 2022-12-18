@@ -21,7 +21,7 @@
         </ion-fab>
 
 
-        <ion-modal class="event-modal" ref="modal" :is-open="isOpen">
+        <ion-modal class="event-modal" ref="modal" :backdropDismiss="false" :is-open="isOpen">
         <ion-header>
           <ion-toolbar>
             <ion-title>Event</ion-title>
@@ -124,7 +124,7 @@
               
               <ion-item v-if="action.type == 'AddResource'" slot="content">
                 <ion-label position="floating">Value </ion-label>
-                <ion-input v-model="action.value" type="number"></ion-input>
+                <ion-input v-model.number="action.value" type="number"></ion-input>
               </ion-item>
 
               <div class="ion-padding" v-if="action.type == 'ChangeSettings'" slot="content">
@@ -139,7 +139,7 @@
         </ion-content>
       </ion-modal>
 
-      <ion-modal class="settings-modal" ref="settingsModal" :is-open="settingsModalOpen">
+      <ion-modal class="settings-modal" ref="settingsModal" :backdropDismiss="false" :is-open="settingsModalOpen">
         <ion-header>
           <ion-toolbar>
             <ion-title>Settings</ion-title>
@@ -266,7 +266,7 @@ export default defineComponent({
       this.updateEvents(this.events)
     },
     addAction() {
-      let action = this.defaultAction
+      let action = {...this.defaultAction}
       action.id = this.nextActionID
       this.nextActionID += 1
       this.eventEditing.actions.push(action)

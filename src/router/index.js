@@ -46,18 +46,22 @@ const routes = [
     children: [
       {
         path: '',
+        name: "defaultGame",
         redirect: '/game/MainGamePage'
       },
       {
         path: 'MainGamePage',
+        name: 'MainGamePage',
         component: () => import('@/views/Game/MainGamePage.vue')
       },
       {
         path: 'HistoryPage',
+        name: 'HistoryPage',
         component: () => import('@/views/Game/HistoryPage.vue')
       },
       {
         path: 'DataPage',
+        name: 'DataPage',
         component: () => import('@/views/Game/DataPage.vue')
       }
     ]
@@ -71,22 +75,27 @@ const routes = [
     children: [
       {
         path: '',
+        name: "defaultLobby",
         redirect: '/lobby/:id/Settings'
       },
       {
         path: 'Players',
+        name: 'PlayersLobby',
         component: () => import('@/views/Lobby/PlayersPage.vue')
       },
       {
         path: 'Settings',
+        name: 'SettingsLobby',
         component: () => import('@/views/Lobby/SettingsPage.vue')
       },
       {
         path: 'Control',
+        name: 'ControlLobby',
         component: () => import('@/views/Lobby/ControlPage.vue')
       },
       {
         path: 'Events',
+        name: 'EventsLobby',
         component: () => import('@/views/Lobby/EventsPage.vue')
       }
     ]
@@ -106,18 +115,22 @@ const routes = [
     children: [
       {
         path: '',
+        name: "defaultTemplate",
         redirect: '/template/:id/Settings'
       },
       {
         path: 'Settings',
+        name: "SettingsTemplate",
         component: () => import('@/views/Template/SettingsPage.vue')
       },
       {
         path: 'Events',
+        name: "EventsTemplate",
         component: () => import('@/views/Template/EventsPage.vue')
       },
       {
         path: 'Control',
+        name: "ControlTemplate",
         component: () => import('@/views/Template/ControlPage.vue')
       }
     ]
