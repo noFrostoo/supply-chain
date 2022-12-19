@@ -79,14 +79,19 @@
         let offset = startOffset;
         if (this.lastOffset !== undefined) {
           offset = this.lastOffset;
+          console.log("lel")
         }
+        
+        console.log("offset", offset)
         const limit = pageSize;
         let lobbies = await (await api.fetchLobbies(store.getters["token"], "Public", limit, offset)).data
         let filtered = this.filterFunc(this.query, lobbies)
         this.lastOffset += filtered.length;
 
         for (let lobby of filtered) {
-          items.value.push(lobby);
+          if (items.value.filter(x => x.id === lobby.id).length == 0) {
+            items.value.push(lobby);
+          }
         }
       }
       

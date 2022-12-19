@@ -29,7 +29,7 @@
             </ion-col>
             <ion-col>
                 <ion-label position="floating">Public</ion-label>
-                <ion-checkbox v-model="lobby.public_lobby" ></ion-checkbox>
+                <ion-checkbox v-model="lobby.public" ></ion-checkbox>
             </ion-col>
             <ion-col >
                 <ion-label position="floating">Password</ion-label>

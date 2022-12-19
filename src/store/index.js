@@ -111,6 +111,7 @@ export default createStore({
         public: true,
         max_players: 4,
         code_use_times: 4,
+        generate_connect_code: false,
         settings: {
           max_rounds: 2,
           resource_basic_price: 15,
