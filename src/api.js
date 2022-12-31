@@ -12,6 +12,7 @@ const axios = Axios.create({
 function authHeaders(token) {
   return {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   };
@@ -111,6 +112,10 @@ export const api = {
       return axios.put(`${APISUFFIX}/users/${userId}/connect?game_id=${gameId}&password=${password}`, null, authHeaders(token));
     return axios.put(`${APISUFFIX}/users/${userId}/connect?game_id=${gameId}`, null, authHeaders(token));
   },
+
+  async startGame(token, id, classes) {
+    axios.post(`${APISUFFIX}/lobby/${id}/start`, classes, authHeaders(token));
+  }
 
 
 };

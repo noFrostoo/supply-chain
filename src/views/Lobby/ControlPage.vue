@@ -38,9 +38,11 @@ import { defineComponent } from 'vue';
 import { IonPage, IonButton, IonItem, IonLabel, IonInput, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 import { useIonRouter } from '@ionic/vue';
+import { api } from '@/api';
 
 export default defineComponent({
   name: 'ControlPage',
+  props: ["id"],
   components: { MenuWidget, IonButton, IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   methods: {
     async createLobby(){
@@ -54,7 +56,9 @@ export default defineComponent({
       this.router.push(`/home`)
     },
     async startGame() {
-      await this.$store.dispatch("startGame")
+      await this.$store.dispatch("toast", "Starting a game...")
+      console.log("id", this.id)
+      api.startGame(this.$store.getters["token"], this.id, this.$store.getters["userClasses"])
     },
     async startSavingTemplate() {
       this.saveTemplate = true

@@ -247,7 +247,9 @@ export default defineComponent({
       this.updateEvents(this.events)
     },
     editEvent(id) {
-      this.eventEditing = this.events.find(obj => obj.id === id);
+      console.log(this.events)
+      let index = this.events.findIndex(obj => obj.id === id);
+      this.eventEditing = this.events[index]
       this.editing = true;
       this.setOpen(true)
       console.log(this.eventEditing)

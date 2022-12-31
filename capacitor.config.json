@@ -4,6 +4,6 @@
 	"webDir": "dist",
 	"bundledWebRuntime": false,
 	"server" : {
-		"url" : "http://localhost:8100/"
+		"url" : "https://localhost:8100/"
 	}
 }

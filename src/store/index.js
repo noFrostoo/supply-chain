@@ -4,17 +4,30 @@ import {alertController, toastController} from "@ionic/vue";
 import { api } from '@/api';
 import { utils } from '@/utlis'
 import { createWebSockets } from '@/ws';
+import router from '@/router';
 
 export default createStore({
   state: {
     template: null,
     newTemplate: false,
+
     lobby: null,
     newLobby: false,
     players: [],
     userClasses: null,
     lobbyOwner: null,
-    ws: null
+
+    ws: null,
+
+    gameRunning: false,
+    player_states: null,
+    player_state: null,
+    flow: null,
+    round: null,
+    settings: null,
+    owner: null,
+    amIOwner: false,
+    history: []
   },
   getters: {
     template: (state) => state.template,
@@ -22,11 +35,16 @@ export default createStore({
     isNewTemplate: (state) => state.newTemplate,
     isNewLobby: (state) => state.newLobby,
     players: (state) => state.players,
-    userClasses: (state) => state.userClasses
+    userClasses: (state) => state.userClasses,
+    playerStates: (state) => state.player_states,
+    playerState: (state) => state.player_state,
   },
   mutations: {
     setWs(state, ws) {
       state.ws = ws
+    },
+    setOwner(state, payload) {
+      state.owner = payload
     },
     setPlayer(state, payload) {
       state.players = payload
@@ -65,6 +83,8 @@ export default createStore({
       state.lobbyOwner = null
       state.userClasses = null
       state.newLobby = false
+      state.owner = null
+      state.history = null
     },
     startCreatingTemplate(state) {
       console.log("creating new template")
@@ -188,30 +208,36 @@ export default createStore({
       let lobbyResponse = await (await api.modifyLobby(context.getters["token"], context.state.lobby.id, context.state.lobby)).data
       context.state.lobby = lobbyResponse.lobby
       context.state.players = lobbyResponse.players
-      context.state.lobbyOwner = lobbyResponse.owner
+      context.state.owner = lobbyResponse.owner
       console.log("update lobby ")
     },
     async createLobby(context) {
       console.log("create lobby")
       //TODO: handle error
       let lobbyResponse = await (await api.createLobby(context.getters["token"], context.state.lobby)).data
+      console.log(lobbyResponse)
       context.state.lobby = lobbyResponse.lobby
       context.state.players = lobbyResponse.players
-      context.state.lobbyOwner = lobbyResponse.owner
+      context.state.owner = lobbyResponse.owner
       context.state.newLobby = false
       return context.state.lobby
     },
-    async startGame(context) {
-      console.log("starting a game")
+    async updateClass(context, payload) {
+      context.state.userClasses[payload.id] = payload.value
+      
+      context.state.ws.send({
+        UpdateClasses: context.state.userClasses
+      })
     },
     async deleteLobby(context) {
       console.log("deleting lobby")
       await api.deleteLobby(context.getters["token"], context.state.lobby.id)
       context.state.lobby = null
       context.state.players = null
-      context.state.lobbyOwner = null
+      context.state.owner = null
       context.state.newLobby = false
       context.state.userClasses = null
+      context.state.owner = null
     },
     async updateTemplate(context) {
       console.log("update template", context.state.template)
@@ -262,7 +288,7 @@ export default createStore({
       console.log("lobby response", lobbyResponse)
       context.state.lobby = lobbyResponse.lobby
       context.state.players = lobbyResponse.players
-      context.state.lobbyOwner = lobbyResponse.owner
+      context.state.owner = lobbyResponse.owner
       context.state.newLobby = false
       return context.state.lobby
     },
@@ -272,6 +298,25 @@ export default createStore({
       context.state.template = template
       context.state.newTemplate = false
       return context.state.template
+    },
+
+    async startGamePlayer(context, payload) {
+      console.log("starting a game player")
+      context.state.gameRunning = true
+      context.state.player_states = payload.player_states
+      context.state.flow = payload.flow
+      context.state.round = payload.round
+      context.state.settings = payload.settings
+      context.state.owner = payload.owner
+      context.state.player_state = context.state.player_states[context.getters["id"]]
+
+      if (context.state.owner != context.getters["id"]) {
+        context.state.amIOwner = true
+      }
+
+      context.state.history = [payload.round_states]
+
+      router.push("/game/")
     },
   },
   modules: {

@@ -24,7 +24,7 @@
             >
                 <ion-label>{{player.username}}</ion-label>
                 <ion-item>
-                  <ion-input @change="changeClass(player.id)" type="number" placeholder="Class value here" :value="userClasses[player.id]"  ></ion-input>
+                  <ion-input @change="changeClass(player.id, $event)" type="number" placeholder="Class value here" :value="userClasses[player.id]"  ></ion-input>
                 </ion-item>
                 <ion-button>Kick</ion-button>
             </ion-item>
@@ -39,13 +39,24 @@
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonList, IonToolbar, IonButton, IonItem, IonLabel, IonInput, IonMenuButton, IonButtons, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
+import { useStore } from 'vuex';
+
+
 
 export default defineComponent({
   name: 'PlayersPage',
   components: { MenuWidget, IonHeader, IonList, IonButton,IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonToolbar, IonTitle, IonContent, IonPage },
   setup() {
-    const changeClass = (id) => {
-      console.log(id)
+    let store = useStore()
+
+    const changeClass = (id, event) => {
+      console.log("store", store)
+      let value = event.target.value;
+      console.log("value", value)
+      store.dispatch("updateClass", {
+        id: id,
+        value: parseInt(value)
+      })
     }
 
     return {

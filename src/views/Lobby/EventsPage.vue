@@ -41,7 +41,8 @@ export default defineComponent({
   data() {
     lobby = this.$store.getters["lobby"]
     if (lobby != null) {
-      events = lobby.events
+      console.log(lobby.events.events)
+      events = lobby.events.events
     } else {
       this.$store.dispatch("alert", "Problem with getting events")
     }

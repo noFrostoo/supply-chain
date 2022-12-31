@@ -81,21 +81,25 @@ const routes = [
       {
         path: 'Players',
         name: 'PlayersLobby',
+        props: true,
         component: () => import('@/views/Lobby/PlayersPage.vue')
       },
       {
         path: 'Settings',
         name: 'SettingsLobby',
+        props: true,
         component: () => import('@/views/Lobby/SettingsPage.vue')
       },
       {
         path: 'Control',
         name: 'ControlLobby',
+        props: true,
         component: () => import('@/views/Lobby/ControlPage.vue')
       },
       {
         path: 'Events',
         name: 'EventsLobby',
+        props: true,
         component: () => import('@/views/Lobby/EventsPage.vue')
       }
     ]

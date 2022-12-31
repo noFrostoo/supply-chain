@@ -19,7 +19,7 @@
           <ion-row v-if="!isTemplate" class="griditem">
             <ion-col>
                 <ion-label position="floating">Generate Connect Code</ion-label>
-                <ion-checkbox v-model="lobby.generate_code" ></ion-checkbox>
+                <ion-checkbox v-model="lobby.generate_connect_code" ></ion-checkbox>
             </ion-col>
             <ion-col >
                 <ion-label position="floating">Connect Code Use Times</ion-label>
@@ -336,7 +336,7 @@
             :ref="`startQueue${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.startQueue" @ionInput="changeValue('startQueue', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.startQueue" @ionInput="changeStartQueue('startQueue', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -484,7 +484,19 @@ export default {
       }
     },
     addClass() {
-      this.classes.push({id: this.nextClassId, class: this.nextClassNum})
+      this.classes.push(
+        {
+          id: this.nextClassId, 
+          class: this.nextClassNum,
+          resourcePriceModal: 0,
+          startMoneyModal: 0,
+          transportCostModal:0,
+          magazineCostModal: 0,
+          fixOrderCostModal: 0,
+          backOrderCostModal:0,
+          additionalCostModal:0,
+          startQueueModal: [1,1]
+        })
       this.nextClassId += 1
       this.nextClassNum += 1
     },
@@ -502,11 +514,27 @@ export default {
           }
         }
       }
-      
+
       this.classes.find(obj => {
         return obj.id === id 
       })[modalName] = Number(newValue)
-    }
+    },
+    changeStartQueue(modalName, id, newValue) {
+      if (newValue === '') {
+        this.$store.dispatch("alert", "bad value entered")
+        return
+      }
+
+      let splitted = newValue.split(",");
+      let parserArr = []
+      for(let val of splitted) {
+        parserArr.push(Number(val))
+      }
+      
+      this.classes.find(obj => {
+        return obj.id === id 
+      })[modalName] = parserArr
+    },
   },
   setup() {
     return { save }

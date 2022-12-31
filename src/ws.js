@@ -18,11 +18,7 @@ import store from '@/store'
 // }
 
 export const createWebSockets = (token) => {
-  const ws = new WebSocket("ws://localhost:3000/lobby/websocket", ["access_token", token]);
-
-  // ws.on('open', function open() {
-  //   ws.send('something');
-  // });
+  const ws = new WebSocket("wss://192.168.0.24:3000/lobby/websocket", ["access_token", token]);
   
   ws.onmessage = async function message(msg) {
     let event = {}
@@ -58,7 +54,7 @@ export const createWebSockets = (token) => {
       store.dispatch("startGame", event.Error)
     }
     else if ( event.GameStart !== undefined ) {
-      store.dispatch("startGame", event.Error)
+      store.dispatch("startGamePlayer", event.GameStart)
     }
     else if ( event.GameEventSettingsChange !== undefined ) {
       store.commit("setSettings", event.GameEventSettingsChange)
@@ -69,7 +65,9 @@ export const createWebSockets = (token) => {
     else if ( event.GameEventResource !== undefined ) {
       console.log(event.GameEventResource)
     }
-
+    else if ( event.UpdateClasses !== undefined ) {
+      console.log(event.GameEventPopUp)
+    }
   };
 
   return ws

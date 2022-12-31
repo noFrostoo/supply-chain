@@ -10,15 +10,15 @@ export const utils = {
             let c = {
                 id: nextId,
                 class: uClass,
-                startMoney: lobby.settings.start_money[uClass],
-                resourcePrice: lobby.settings.resource_price[uClass],
-                startMagazine: lobby.settings.start_magazine[uClass],
-                transportCost: lobby.settings.transport_cost[uClass],
-                magazineCost: lobby.settings.start_money[uClass],
-                fixOrderCost: lobby.settings.fix_order_cost[uClass],
-                backOrderCost: lobby.settings.back_order_cost[uClass],
-                additionalCost: lobby.settings.additional_cost[uClass],
-                startQueue: lobby.settings.start_order_queue[uClass],
+                startMoney: lobby.settings.start_money[uClass] ? lobby.settings.start_money[uClass]: 0,
+                resourcePrice: lobby.settings.resource_price[uClass] ? lobby.settings.resource_price[uClass]:0,
+                startMagazine: lobby.settings.start_magazine[uClass] ? lobby.settings.start_magazine[uClass]:0,
+                transportCost: lobby.settings.transport_cost[uClass]? lobby.settings.transport_cost[uClass]:0,
+                magazineCost: lobby.settings.start_money[uClass] ? lobby.settings.start_money[uClass]: 0,
+                fixOrderCost: lobby.settings.fix_order_cost[uClass] ? lobby.settings.fix_order_cost[uClass]: 0,
+                backOrderCost: lobby.settings.back_order_cost[uClass] ? lobby.settings.back_order_cost[uClass]: 0,
+                additionalCost: lobby.settings.additional_cost[uClass] ? lobby.settings.additional_cost[uClass]: 0,
+                startQueue: lobby.settings.start_order_queue[uClass] ? lobby.settings.start_order_queue[uClass]: [1,1],
             }
             console.log(c)
             classes.push(c)
