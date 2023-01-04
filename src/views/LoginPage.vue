@@ -26,6 +26,9 @@
             <ion-button fill="outline" shape="round" @click="signUp">Sign Up</ion-button>
             <ion-button :disable="!validUserName && !validPassword " shape="round" @click="checkLogin">Sign In</ion-button>
           </ion-row>
+          <ion-row class="grid-item">
+            <ion-button fill="outline" shape="round">Quick Connect</ion-button>
+          </ion-row>
         </ion-col>
       </ion-grid>
       </form>
@@ -139,13 +142,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 5px;
 }
 
 #login {
   text-align: center;
   border-radius: 25px;
   background: #eb445a;
-  padding: 20px;
+  padding: 15px;
   min-width: 50%;
   max-width: 70%;
 }
@@ -154,10 +158,9 @@ export default {
   text-align: center;
   border-radius: 25px;
   background: #eb445a;
-  padding: 20px;
+  padding: 15px;
   min-width: 50%;
   max-width: 70%;
-
 }
 
 </style>

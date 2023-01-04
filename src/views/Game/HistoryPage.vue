@@ -12,8 +12,8 @@
         </ion-toolbar>
       </ion-header>
       <ion-item  v-if="show_others" >
-        <ion-select interface="action-sheet" placeholder="Select resource">
-          <ion-select-option v-for="player in players" :key="player.id" :value="player.id">{{ player.username }}</ion-select-option>
+        <ion-select interface="action-sheet" v-model="chosenPlayer" placeholder="Select players">
+          <ion-select-option v-for="player in players" :key="player.id" :value="player">{{ player.username }}</ion-select-option>
         </ion-select>
       </ion-item>
       <v-table>
@@ -67,113 +67,31 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 
 export default defineComponent({
-  name: 'Tab2Page',
+  name: 'HistoryPage',
   components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   data(){
+    let players = this.$store.getters["players"]
+    let chosenPlayer = this.$store.getters["user"]
+    if (this.$store.getters["amIOwner"]) {
+      chosenPlayer = players[0]
+    }
+
+    let rounds = []
+    for(let round of this.$store.getters["history"]) {
+      //TODO: missing player
+      rounds.push(round[chosenPlayer.id])
+    }
+
     return {
       show_others: true,
-      players: [
-        {
-          id: "XDXDD",
-          username: "XD"
-        }
-      ],
-      rounds: [
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },      {
-        round: 1,
-        money:1,
-        spent_money:1,
-        magazine_state: 1,
-        performance: 1,
-        back_order_sum: 1,
-        placed_order: 1,
-        received_order: 1
-      },
-    ]
+      players: players,
+      chosenPlayer: chosenPlayer,
+      rounds: rounds
     }
   }
 });

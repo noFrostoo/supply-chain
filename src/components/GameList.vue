@@ -6,16 +6,23 @@
             <ion-label>Started</ion-label>
         </ion-card>
         <ion-list id="game-list">
-        <ion-item
-            v-for="item in items"
-            :key="item"
-            role="article"
-        >
-            <ion-label>{{item.name}}</ion-label>
-            <ion-label>{{item.max_players}}</ion-label>
-            <ion-label>{{item.started}}</ion-label>
-            <ion-button @click="connect(item.id)">Connect</ion-button>
-        </ion-item>
+          <ion-item role="article">
+            <ion-label>Name</ion-label>
+            <ion-label>Max players</ion-label>
+            <ion-label>Game Started</ion-label>
+            <ion-button style="opacity: 0;"></ion-button>
+          </ion-item>
+          <ion-item
+              v-for="item in items"
+              :key="item"
+              role="article"
+          >
+              <ion-label>{{item.name}}</ion-label>
+              <ion-label>{{item.max_players}}</ion-label>
+              <ion-label v-if="item.started">Yes</ion-label>
+              <ion-label v-else>No</ion-label>
+              <ion-button @click="connect(item.id)">Connect</ion-button>
+          </ion-item>
         </ion-list>
 
         <ion-infinite-scroll threshold="200px" id="infinitescroll" @ionInfinite="loadData($event)" >

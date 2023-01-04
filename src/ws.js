@@ -48,7 +48,7 @@ export const createWebSockets = (token) => {
       store.dispatch("alert", event.Error)
     }
     else if ( event.RoundStart !== undefined ) {
-      store.dispatch("startGame", event.Error)
+      store.dispatch("startRound", event.RoundStart)
     }
     else if ( event.RoundEnd !== undefined ) {
       store.dispatch("startGame", event.Error)
@@ -67,6 +67,13 @@ export const createWebSockets = (token) => {
     }
     else if ( event.UpdateClasses !== undefined ) {
       console.log(event.GameEventPopUp)
+    }
+    else if ( event.Ack !== undefined ) {
+      console.log(event.Ack)
+      if(store.getters["confirmRound"]) {
+        store.commit("confirmEndingRound")
+      }
+      store.dispatch("toast", "Received confirmation")
     }
   };
 

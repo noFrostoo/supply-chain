@@ -46,7 +46,16 @@ export default defineComponent({
   components: { MenuWidget, IonButton, IonItem, IonInput, IonLabel, IonMenuButton, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
   methods: {
     async createLobby(){
-      let lobby = await this.$store.dispatch("createLobby")
+      let lobbyResponse = await (await api.createLobby(this.$store.getters["token"], this.$store.getters["lobby"])).data
+      let lobby = this.$store.commit("createLobby", lobbyResponse)
+      console.log(lobby)
+      console.log(this.$store.getters["lobby"])
+      lobby = this.$store.getters["lobby"]
+      if (lobby.password !== undefined)
+        await this.$store.dispatch("connectPlayer", lobby.id, lobby.password)
+      else 
+        await this.$store.dispatch("connectPlayer", lobby.id)
+
       this.$store.dispatch("toast", "Lobby create")
       this.router.push(`/lobby/${lobby.id}/Settings`)
     },

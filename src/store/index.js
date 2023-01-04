@@ -23,11 +23,15 @@ export default createStore({
     player_states: null,
     player_state: null,
     flow: null,
+    recipient: null,
     round: null,
     settings: null,
     owner: null,
     amIOwner: false,
-    history: []
+    history: [],
+    newRound: false,
+    roundFinish: false,
+    confirmRound: false,
   },
   getters: {
     template: (state) => state.template,
@@ -38,6 +42,11 @@ export default createStore({
     userClasses: (state) => state.userClasses,
     playerStates: (state) => state.player_states,
     playerState: (state) => state.player_state,
+    amIOwner: (state) => state.amIOwner,
+    history: (state) => state.history,
+    roundFinish: (state) => state.roundFinish,
+    newRound: (state) => state.newRound,
+    confirmRound: (state) => state.confirmRound
   },
   mutations: {
     setWs(state, ws) {
@@ -65,6 +74,13 @@ export default createStore({
       console.log("reseting new lobby")
       state.newLobby = false
     },
+    newRoundStarted(state) {
+      state.newRound = false
+    },
+    confirmEndingRound(state) {
+      state.confirmRound = false
+      state.roundFinish = true
+    },
     addDefaultClass(state) {
       state.lobby.settings.user_classes.push(1)
     },
@@ -85,6 +101,14 @@ export default createStore({
       state.newLobby = false
       state.owner = null
       state.history = null
+    },
+    createLobby(state, lobbyResponse) {
+      console.log("create lobby")
+      state.lobby = lobbyResponse.lobby
+      state.players = lobbyResponse.players
+      state.owner = lobbyResponse.owner
+      state.newLobby = false
+      return lobbyResponse.lobby
     },
     startCreatingTemplate(state) {
       console.log("creating new template")
@@ -211,17 +235,6 @@ export default createStore({
       context.state.owner = lobbyResponse.owner
       console.log("update lobby ")
     },
-    async createLobby(context) {
-      console.log("create lobby")
-      //TODO: handle error
-      let lobbyResponse = await (await api.createLobby(context.getters["token"], context.state.lobby)).data
-      console.log(lobbyResponse)
-      context.state.lobby = lobbyResponse.lobby
-      context.state.players = lobbyResponse.players
-      context.state.owner = lobbyResponse.owner
-      context.state.newLobby = false
-      return context.state.lobby
-    },
     async updateClass(context, payload) {
       context.state.userClasses[payload.id] = payload.value
       
@@ -301,26 +314,64 @@ export default createStore({
     },
 
     async startGamePlayer(context, payload) {
-      console.log("starting a game player")
+      console.log("starting a game player", payload)
       context.state.gameRunning = true
-      context.state.player_states = payload.player_states
-      context.state.flow = payload.flow
-      context.state.round = payload.round
-      context.state.settings = payload.settings
-      context.state.owner = payload.owner
-      context.state.player_state = context.state.player_states[context.getters["id"]]
-
-      if (context.state.owner != context.getters["id"]) {
-        context.state.amIOwner = true
-      }
-
-      context.state.history = [payload.round_states]
+      processRoundStart(context, payload);
 
       router.push("/game/")
     },
+    async sendEndRound(context, payload) {
+      let c = context.state.userClasses[context.getters["id"]]
+      let obj = JSON.stringify({
+        RoundEnd: {
+          placed_order: {
+            recipient: context.state.flow.flow[context.getters["id"]] ? context.state.flow.flow[context.getters["id"]]: "null" ,
+            sender: context.getters["id"] ? context.getters["id"]: "null",
+            value: payload, 
+            cost: context.state.settings.resource_price[c] * payload + context.state.settings.transport_cost[c] + context.state.settings.fix_order_cost[c]
+          }
+        }
+      })
+      console.log("sending", obj)
+      context.state.ws.send(obj)
+
+      context.state.confirmRound = true
+      context.dispatch("toast", "Ending round")
+    },
+    async startRound(context, payload) {
+      print("start game payload", payload)
+      processRoundStart(context, payload);
+    },
+
+
+
   },
   modules: {
     user: userModule
 
   }
 })
+function processRoundStart(context, payload) {
+  context.state.player_states = payload.player_states;
+  context.state.flow = payload.flow;
+  context.state.round = payload.round;
+  context.state.settings = payload.settings;
+  context.state.owner = payload.owner;
+  context.state.player_state = context.state.player_states[context.getters["id"]];
+
+  for (const [key, value] of Object.entries(context.state.flow)) {
+    if (value == context.getters["id"]) {
+      context.state.recipient = key;
+    }
+  }
+
+  if (context.state.owner != context.getters["id"]) {
+    context.state.amIOwner = true;
+  }
+
+  context.state.history.push({ round: payload.round, ...payload.player_states });
+  context.state.roundFinish = false;
+  context.state.confirmRound = false;
+  context.state.newRound = true;
+}
+

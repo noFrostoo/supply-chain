@@ -16,56 +16,85 @@
             <ion-title size="large">Control</ion-title>
           </ion-toolbar>
         </ion-header>
-          <ion-grid >
-            <ion-row>
-              <ion-col size="4" >
-                <ion-row>
-                  Incoming orders
+          <div v-if="!foundFinished">
+            <ion-grid >
+              <ion-row>
+                <ion-col size="4" >
+                  <ion-row>
+                    Incoming orders
+                  </ion-row>
+                  <ion-row :key="order.value" v-for="order in state.incoming_orders">
+                    <ion-label>{{ order.value }}</ion-label>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="4" >
+                  <ion-row>
+                    Order Value
+                  </ion-row>
+                  <ion-row>
+                    <ion-input v-model.number="value"></ion-input>
+                  </ion-row>
+                  <ion-row>
+                    <ion-button @click="endRound">End Round</ion-button>
+                  </ion-row>
+                </ion-col>
+                <ion-col size="4" >
+                  <ion-row>
+                    Incoming orders
+                  </ion-row>
+                  <ion-row :key="order.value" v-for="order in state.requested_orders">
+                    <ion-label>{{ order.value }}</ion-label>
+                  </ion-row>
+                </ion-col>
                 </ion-row>
-                <ion-row :key="order.value" v-for="order in state.incoming_orders">
-                  <ion-label>{{ order.value }}</ion-label>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4" >
-                <ion-row>
-                  Order Value
-                </ion-row>
-                <ion-row>
-                  <ion-input v-model.number="value"></ion-input>
-                </ion-row>
-                <ion-row>
-                  <ion-button @click="endRound">End Round</ion-button>
-                </ion-row>
-              </ion-col>
-              <ion-col size="4" >
-                <ion-row>
-                  Incoming orders
-                </ion-row>
-                <ion-row :key="order.value" v-for="order in state.requested_orders">
-                  <ion-label>{{ order.value }}</ion-label>
-                </ion-row>
-              </ion-col>
-              </ion-row>
-          </ion-grid>
+            </ion-grid>
+          </div>
+          <div v-else>
+            Round finished, waiting for others to finish 
+
+          </div>
+
+          <ion-modal  ref="modal" :is-open="newRound"  >
+            <ion-header>
+              <ion-toolbar>
+                  <ion-title>New Round</ion-title>
+                  <ion-buttons slot="end">
+                  <ion-button @click="closeModal">Confirm</ion-button>
+                  </ion-buttons>
+              </ion-toolbar>
+              </ion-header>
+              <ion-content class="ion-padding">
+                  New Round
+              </ion-content>
+          </ion-modal>
       </ion-content>
     </ion-page>
   </ion-page>
 </template>
+
+
 <script>
-import { IonPage, IonInput, IonRow,IonCol, IonLabel, IonGrid, IonButton, IonButtons, IonMenuButton,  IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonInput, IonRow,IonCol, IonModal, IonLabel, IonGrid, IonButton, IonButtons, IonMenuButton,  IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
 
 export default  {
   name: 'MainGamePage',
-  components: {  IonHeader, IonInput, IonButton, IonLabel, IonRow,IonCol, IonGrid,  MenuWidget, IonButtons, IonMenuButton, IonToolbar, IonTitle, IonContent, IonPage },
+  components: {  IonHeader, IonInput, IonButton, IonModal, IonLabel, IonRow,IonCol, IonGrid,  MenuWidget, IonButtons, IonMenuButton, IonToolbar, IonTitle, IonContent, IonPage },
   data() {
     return {
-      value: 0
+      value: 0,
+      sentOrder: false,
+      newOrder: null
     }
   },
   methods: {
-    endRound() {
+    async endRound() {
       console.log("value", this.value)
+      await this.$store.dispatch("sendEndRound", this.value)
+    },
+    async closeModal() {
+      this.$store.commit("newRoundStarted")
+      this.$refs.modal.$el.dismiss()
     }
   },
   computed: {
@@ -86,7 +115,16 @@ export default  {
         placed_order: null,
         received_order: null,
       }
+    },
+    foundFinished() {
+      return this.$store.getters["roundFinish"]
+    },
+    newRound() {
+      return this.$store.getters["newRound"]
     }
+  },
+  watch: {
+
   }
 
 };
