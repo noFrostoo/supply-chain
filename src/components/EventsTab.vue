@@ -226,25 +226,25 @@ export default defineComponent({
       this.editing = false;
       this.setOpen(true)
     },
-    addEvent() {
+    async addEvent() {
       console.log(this.eventEditing)
       this.events.push({...this.eventEditing})
       this.eventEditing = {...this.defaultEvent}
       this.eventEditing.id = this.nextEventID
       this.nextEventID += 1
       console.log(this.events)
-      this.updateEvents(this.events)
+      await this.updateEvents(this.events)
       this.setOpen(false)
       this.$refs.modal.$el.dismiss()
     },
-    deleteEvent(id) {
+    async deleteEvent(id) {
       const index = this.events.findIndex(obj => obj.id === id);
       this.events = [
           ...this.events.slice(0, index),
           ...this.events.slice(index + 1)
       ]
       console.log("event deleted", this.events)
-      this.updateEvents(this.events)
+      await this.updateEvents(this.events)
     },
     editEvent(id) {
       console.log(this.events)
@@ -254,10 +254,10 @@ export default defineComponent({
       this.setOpen(true)
       console.log(this.eventEditing)
     },
-    saveEvents() {
-      this.updateEvents(this.events)
+    async saveEvents() {
+      await this.updateEvents(this.events)
     },
-    deleteAction(id) {
+    async deleteAction(id) {
 
       const index = this.eventEditing.actions.findIndex(obj => obj.id === id);
       this.eventEditing.actions = [
@@ -265,14 +265,14 @@ export default defineComponent({
           ...this.eventEditing.actions.slice(index + 1)
       ]
       console.log(this.eventEditing.actions)
-      this.updateEvents(this.events)
+      await this.updateEvents(this.events)
     },
-    addAction() {
+    async addAction() {
       let action = {...this.defaultAction}
       action.id = this.nextActionID
       this.nextActionID += 1
       this.eventEditing.actions.push(action)
-      this.updateEvents(this.events)
+      await this.updateEvents(this.events)
     },
     saveNewLobby(lobby) {
       this.settingsChangeAction.new_settings = lobby.settings

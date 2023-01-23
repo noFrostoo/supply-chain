@@ -2,8 +2,5 @@
 	"appId": "io.ionic.starter",
 	"appName": "SupplyChain",
 	"webDir": "dist",
-	"bundledWebRuntime": false,
-	"server" : {
-		"url" : "https://localhost:8100/"
-	}
+	"bundledWebRuntime": false
 }

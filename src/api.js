@@ -115,6 +115,10 @@ export const api = {
 
   async startGame(token, id, classes) {
     axios.post(`${APISUFFIX}/lobby/${id}/start`, classes, authHeaders(token));
+  },
+
+  async getPlayersStats(token, id) {
+    return axios.get(`${APISUFFIX}/lobby/${id}/stats/players/`, authHeaders(token));
   }
 
 

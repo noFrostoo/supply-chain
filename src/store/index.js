@@ -29,9 +29,14 @@ export default createStore({
     owner: null,
     amIOwner: false,
     history: [],
+    roundSummary: {
+    },
     newRound: false,
     roundFinish: false,
     confirmRound: false,
+    gameEnd: false,
+    events: [],
+    endingStats: null
   },
   getters: {
     template: (state) => state.template,
@@ -46,7 +51,13 @@ export default createStore({
     history: (state) => state.history,
     roundFinish: (state) => state.roundFinish,
     newRound: (state) => state.newRound,
-    confirmRound: (state) => state.confirmRound
+    confirmRound: (state) => state.confirmRound,
+    gameEnd: (state) => state.gameEnd,
+    events: (state) => state.events,
+    endingStats: (state) => state.endingStats,
+    roundSummary: (state) => state.roundSummary,
+    round: (state) => state.round,
+    owner: (state) => state.owner
   },
   mutations: {
     setWs(state, ws) {
@@ -78,8 +89,17 @@ export default createStore({
       state.newRound = false
     },
     confirmEndingRound(state) {
+      console.log("confirming round ")
       state.confirmRound = false
       state.roundFinish = true
+    },
+    gameEnd(state, payload) {
+      state.gameEnd = true
+      state.endingStats = payload
+      state.ws.close()
+    },
+    addEvent(state, payload) {
+      state.events.push(payload)
     },
     addDefaultClass(state) {
       state.lobby.settings.user_classes.push(1)
@@ -122,15 +142,16 @@ export default createStore({
           show_stats_for_users: true,
           unlimited_money: false,
           user_classes: [1],
-          start_money: {1:100},
-          start_magazine: {1: 100},
-          resource_price: {1:10},
+          start_money: {1:100000},
+          start_magazine: {1: 10},
+          resource_price: {1:1},
           transport_cost: {1:2},
           magazine_cost: {1:1},
           fix_order_cost: {1:1},
           back_order_cost: {1:1},
           additional_cost: {1:0},
-          start_order_queue: {1:[4,4]},
+          incoming_start_queue: {1:[4,4]},
+          requested_start_queue: {1:[3,3]},
           demand_style: {
             type: 'Linear',
             start: 10,
@@ -162,15 +183,16 @@ export default createStore({
           show_stats_for_users: true,
           unlimited_money: false,
           user_classes: [1],
-          start_money: {1:100},
-          start_magazine: {1: 100},
-          resource_price: {1:10},
+          start_money: {1:100000},
+          start_magazine: {1: 10},
+          resource_price: {1:1},
           transport_cost: {1:2},
           magazine_cost: {1:1},
           fix_order_cost: {1:1},
           back_order_cost: {1:1},
           additional_cost: {1:0},
-          start_order_queue: {1:[4,4]},
+          incoming_start_queue: {1:[4,4]},
+          requested_start_queue: {1:[3,3]},
           demand_style: {
             type: 'Linear',
             start: 10,
@@ -229,18 +251,20 @@ export default createStore({
     },
     async updateLobby(context, payload) {
       context.state.lobby = payload
-      let lobbyResponse = await (await api.modifyLobby(context.getters["token"], context.state.lobby.id, context.state.lobby)).data
-      context.state.lobby = lobbyResponse.lobby
-      context.state.players = lobbyResponse.players
-      context.state.owner = lobbyResponse.owner
+      if (!context.state.newLobby) {
+        let lobbyResponse = await (await api.modifyLobby(context.getters["token"], context.state.lobby.id, context.state.lobby)).data
+        context.state.lobby = lobbyResponse.lobby
+        context.state.players = lobbyResponse.players
+        context.state.owner = lobbyResponse.owner
+      }
       console.log("update lobby ")
     },
     async updateClass(context, payload) {
       context.state.userClasses[payload.id] = payload.value
       
-      context.state.ws.send({
+      context.state.ws.send(JSON.stringify({
         UpdateClasses: context.state.userClasses
-      })
+      }))
     },
     async deleteLobby(context) {
       console.log("deleting lobby")
@@ -288,12 +312,20 @@ export default createStore({
     async updateLobbyEvents(context, payload) {
       let events = []
       for (let event of payload) {
+        let actions = []
+        for (let action of event.actions) {
+          let fAction = utils.removeEmptyRecursive(action)
+          actions.push(fAction)
+        }
         let filtered = utils.removeEmpty(event)
+        filtered.actions = actions
         console.log(filtered)
         events.push(filtered)
       }
-      context.state.lobby.events.events = events
+      console.log(events)
+      context.state.lobby.events.events = [...events]
       console.log("update lobby events")
+      console.log(context.state.lobby.events.events)
     },
     async fetchLobby(context, id) {
       console.log("Fetching lobby")
@@ -339,7 +371,7 @@ export default createStore({
       context.dispatch("toast", "Ending round")
     },
     async startRound(context, payload) {
-      print("start game payload", payload)
+      console.log("start game payload", payload)
       processRoundStart(context, payload);
     },
 
@@ -352,11 +384,25 @@ export default createStore({
   }
 })
 function processRoundStart(context, payload) {
+  context.state.round = payload.round;
+
+  if (context.state.owner.id == context.getters["id"]) {
+    context.state.amIOwner = true;
+  }
+
+  if (context.state.round != 0 && !context.state.amIOwner) {
+    context.state.roundSummary.moneyDiff = context.state.player_state.money - payload.player_states[context.getters["id"]].money
+    context.state.roundSummary.magazineDiff = context.state.player_state.magazine_state - payload.player_states[context.getters["id"]].magazine_state
+    context.state.roundSummary.backOrderDiff = context.state.player_state.back_order_sum - payload.player_states[context.getters["id"]].back_order_sum
+    context.state.roundSummary.sendOrder = payload.send_orders[context.getters["id"]]
+    context.state.roundSummary.placedOrder = payload.round_orders[context.getters["id"]]
+    context.state.roundSummary.gotOrder = context.state.player_state.incoming_orders[0]
+  }
+
   context.state.player_states = payload.player_states;
   context.state.flow = payload.flow;
-  context.state.round = payload.round;
+  
   context.state.settings = payload.settings;
-  context.state.owner = payload.owner;
   context.state.player_state = context.state.player_states[context.getters["id"]];
 
   for (const [key, value] of Object.entries(context.state.flow)) {
@@ -365,9 +411,13 @@ function processRoundStart(context, payload) {
     }
   }
 
-  if (context.state.owner != context.getters["id"]) {
-    context.state.amIOwner = true;
+  let players = []
+  for (let p of context.state.players) {
+    if (context.state.owner.id != p.id) {
+      players.push(p);
+    }
   }
+  context.state.players = players;
 
   context.state.history.push({ round: payload.round, ...payload.player_states });
   context.state.roundFinish = false;

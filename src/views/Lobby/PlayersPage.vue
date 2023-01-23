@@ -13,7 +13,7 @@
       <ion-content :fullscreen="true">
         <ion-header collapse="condense">
           <ion-toolbar>
-            <ion-title size="large">Tab 3</ion-title>
+            <ion-title size="large">Players</ion-title>
           </ion-toolbar>
         </ion-header>
           <ion-list>
@@ -23,8 +23,11 @@
                 class="item"
             >
                 <ion-label>{{player.username}}</ion-label>
-                <ion-item>
+                <ion-item v-if="player.id != owner.id">
                   <ion-input @change="changeClass(player.id, $event)" type="number" placeholder="Class value here" :value="userClasses[player.id]"  ></ion-input>
+                </ion-item>
+                <ion-item v-else>
+                  Owner
                 </ion-item>
                 <ion-button>Kick</ion-button>
             </ion-item>
@@ -72,6 +75,9 @@ export default defineComponent({
       } 
 
       return players
+    },
+    owner() {
+        return this.$store.getters["owner"]
     },
     userClasses() {
       let userClasses = this.$store.getters["userClasses"]

@@ -26,12 +26,45 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import store from './store'
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUserSecret)
+
 loadFonts()
+
+import { use } from 'echarts/core';
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+} from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+import { BarChart, LineChart } from "echarts/charts";
+
+use([
+  CanvasRenderer,
+  LineChart,
+  BarChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+]);
+
 
 const app = createApp(App).use(store)
   .use(IonicVue)
   .use(vuetify)
-  .use(router);
+  .use(router)
+  .component('font-awesome-icon', FontAwesomeIcon);
 
 router.isReady().then(() => {
   app.mount('#app');

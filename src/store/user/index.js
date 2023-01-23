@@ -11,7 +11,7 @@ const defaultState = {
     id: null,
     username: null,
     userType: null,
-    gameId: null
+    gameId: null,
 };
 
 export const actions = {
@@ -45,6 +45,7 @@ export const actions = {
             const response = await api.getMe(context.state.token)
             if (response.data) {
                 setUserData(context, response.data)
+                console.log("get me data", response.data)
             }
             return true;
         } catch (error) {

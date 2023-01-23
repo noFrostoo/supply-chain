@@ -56,17 +56,23 @@ export const createWebSockets = (token) => {
     else if ( event.GameStart !== undefined ) {
       store.dispatch("startGamePlayer", event.GameStart)
     }
+    else if ( event.GameEnd !== undefined ) {
+      store.commit("gameEnd", event.GameEnd)
+    }
     else if ( event.GameEventSettingsChange !== undefined ) {
+      console.log("event popup", event.GameEventSettingsChange)
       store.commit("setSettings", event.GameEventSettingsChange)
     }
     else if ( event.GameEventPopUp !== undefined ) {
-      console.log(event.GameEventPopUp)
+      console.log("event popup", event.GameEventPopUp)
+      store.commit("addEvent", event.GameEventPopUp)
     }
     else if ( event.GameEventResource !== undefined ) {
-      console.log(event.GameEventResource)
+      console.log("event resource", event.GameEventResource)
+      store.commit("addEvent", event.GameEventResource)
     }
     else if ( event.UpdateClasses !== undefined ) {
-      console.log(event.GameEventPopUp)
+      console.log(event.UpdateClasses)
     }
     else if ( event.Ack !== undefined ) {
       console.log(event.Ack)

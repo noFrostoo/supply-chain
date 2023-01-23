@@ -91,7 +91,8 @@
                 <ion-button style="margin: 5px" id="additionalCost">Set additional cost</ion-button>
               </ion-row>
               <ion-row class="row" >
-                <ion-button style="margin: 5px" id="startQueue">Set order queue</ion-button>
+                <ion-button style="margin: 5px" id="incomingQueue">Set incoming queue</ion-button>
+                <ion-button style="margin: 5px" id="requestedQueue">Set requested queue</ion-button>
                 <ion-button style="margin: 5px" id="demand">Set demand style</ion-button>
                 <ion-button style="margin: 5px" id="supply">Set supply style</ion-button>
               </ion-row>
@@ -168,7 +169,7 @@
             :ref="`startMoney${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.startMagazine" type="number" @ionInput="changeValue('startMoney', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.startMoney" type="number" @ionInput="changeValue('startMoney', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -318,12 +319,12 @@
       </ion-content>
     </ion-modal>
 
-    <ion-modal handle-behavior="cycle" ref="startQueueModal"  :can-dismiss="canDismiss" trigger="startQueue">
+    <ion-modal handle-behavior="cycle" ref="incomingQueueModal"  :can-dismiss="canDismiss" trigger="incomingQueue">
       <ion-header>
         <ion-toolbar>
             <ion-title>Start Money</ion-title>
             <ion-buttons slot="end">
-            <ion-button @click="dissmisModal('startQueue', false)">Close</ion-button>
+            <ion-button @click="dissmisModal('incomingQueue', false)">Close</ion-button>
             </ion-buttons>
         </ion-toolbar>
         </ion-header>
@@ -333,10 +334,34 @@
             v-for="uClass in classes"
             :key="uClass.id"
             :id="uClass.id" 
-            :ref="`startQueue${uClass.id}`"
+            :ref="`incomingQueue${uClass.id}`"
         >
             <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
-            <ion-input :value="uClass.startQueue" @ionInput="changeStartQueue('startQueue', uClass.id, $event.target.value)" ></ion-input>
+            <ion-input :value="uClass.incomingQueue" @ionInput="changeQueue('incomingQueue', uClass.id, $event.target.value)" ></ion-input>
+        </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-modal>
+
+    <ion-modal handle-behavior="cycle" ref="requestedQueueModal"  :can-dismiss="canDismiss" trigger="requestedQueue">
+      <ion-header>
+        <ion-toolbar>
+            <ion-title>Start Money</ion-title>
+            <ion-buttons slot="end">
+            <ion-button @click="dissmisModal('requestedQueue', false)">Close</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+        <ion-list>
+        <ion-item 
+            v-for="uClass in classes"
+            :key="uClass.id"
+            :id="uClass.id" 
+            :ref="`requestedQueue${uClass.id}`"
+        >
+            <ion-label position="floating">Class name: {{uClass.class}}</ion-label>
+            <ion-input :value="uClass.requestedQueue" @ionInput="changeQueue('requestedQueue', uClass.id, $event.target.value)" ></ion-input>
         </ion-item>
         </ion-list>
       </ion-content>
@@ -478,7 +503,8 @@ export default {
         "fixOrderCost": this.$refs.fixOrderCostModal.$el.dismiss(),
         "backOrderCost": this.$refs.backOrderCostModal.$el.dismiss(),
         "additionalCost": this.$refs.additionalCostModal.$el.dismiss(),
-        "startQueue": this.$refs.startQueueModal.$el.dismiss(),
+        "incomingQueue": this.$refs.incomingQueueModal.$el.dismiss(),
+        "requestedQueue": this.$refs.requestedQueueModal.$el.dismiss(),
         "demand": this.$refs.demandModal.$el.dismiss(),
         "supply": this.$refs.supplyModal.$el.dismiss()
       }
@@ -495,7 +521,8 @@ export default {
           fixOrderCostModal: 0,
           backOrderCostModal:0,
           additionalCostModal:0,
-          startQueueModal: [1,1]
+          incomingQueue: [1,1],
+          requestedQueue: [1,1]
         })
       this.nextClassId += 1
       this.nextClassNum += 1
@@ -519,7 +546,7 @@ export default {
         return obj.id === id 
       })[modalName] = Number(newValue)
     },
-    changeStartQueue(modalName, id, newValue) {
+    changeQueue(modalName, id, newValue) {
       if (newValue === '') {
         this.$store.dispatch("alert", "bad value entered")
         return

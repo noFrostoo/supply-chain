@@ -18,7 +18,8 @@ export const utils = {
                 fixOrderCost: lobby.settings.fix_order_cost[uClass] ? lobby.settings.fix_order_cost[uClass]: 0,
                 backOrderCost: lobby.settings.back_order_cost[uClass] ? lobby.settings.back_order_cost[uClass]: 0,
                 additionalCost: lobby.settings.additional_cost[uClass] ? lobby.settings.additional_cost[uClass]: 0,
-                startQueue: lobby.settings.start_order_queue[uClass] ? lobby.settings.start_order_queue[uClass]: [1,1],
+                incomingQueue: lobby.settings.incoming_start_queue[uClass] ? lobby.settings.incoming_start_queue[uClass]: [1,1],
+                requestedQueue: lobby.settings.requested_start_queue[uClass] ? lobby.settings.requested_start_queue[uClass]: [1,1],
             }
             console.log(c)
             classes.push(c)
@@ -38,7 +39,8 @@ export const utils = {
             unlimited_money: template.settings.unlimited_money,
             resource_basic_price: template.settings.resource_basic_price,
             user_classes: [],
-            start_order_queue: {},
+            incoming_start_queue: {},
+            requested_start_queue: {},
             resource_price: {},
             start_money: {},
             start_magazine: {},
@@ -53,7 +55,8 @@ export const utils = {
             console.log(uClass)
             console.log(uClass.startQueue)
             settings.user_classes.push(uClass.class);
-            settings.start_order_queue[uClass.class] = uClass.startQueue
+            settings.incoming_start_queue[uClass.class] = uClass.incomingQueue
+            settings.requested_start_queue[uClass.class] = uClass.requestedQueue
             settings.resource_price[uClass.class] = uClass.resourcePrice
             settings.start_money[uClass.class] = uClass.startMoney
             settings.start_magazine[uClass.class] = uClass.startMagazine
