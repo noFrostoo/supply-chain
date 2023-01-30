@@ -144,6 +144,7 @@
 <script>
 import { IonPage, IonInput, IonRow,IonCol, IonList, IonItem, IonModal, IonLabel, IonGrid, IonButton, IonButtons, IonMenuButton,  IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import MenuWidget from '@/components/MenuWidget.vue';
+import { useIonRouter } from '@ionic/vue';
 
 export default  {
   name: 'MainGamePage',
@@ -163,6 +164,11 @@ export default  {
     async closeModal() {
       this.$store.commit("newRoundStarted")
       this.$refs.modal.$el.dismiss()
+    },
+    async endGame() {
+      this.$store.commit("resetGameEnd")
+      this.$refs.modalGame.$el.dismiss()
+      useIonRouter().push("/home")
     },
     async processEvent() {
       this.$store.commit("popCurrentEvent")

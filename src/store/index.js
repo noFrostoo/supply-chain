@@ -101,6 +101,9 @@ export default createStore({
       state.endingStats = payload
       state.ws.close()
     },
+    resetGameEnd(state) {
+      state.gameEnd = false
+    },
     addEvent(state, payload) {
       state.events.push(payload)
     },

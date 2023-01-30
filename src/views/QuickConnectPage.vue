@@ -32,8 +32,9 @@
   import { defineComponent } from 'vue';
   import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
   import MenuWidget from '@/components/MenuWidget.vue';
-  import {api} from "@/api";
-  
+  import { api } from "@/api";
+  import { createWebSockets } from "@/ws";
+
   export default defineComponent({
     name: 'ControlPage',
     components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, MenuWidget },
@@ -47,17 +48,17 @@
         if (this.$store.getter["isLoggedIn"]) {
           let data = await (await api.quickConnect(this.$store.getter["token"], this.connectCode)).data
           this.$store.commit("setGameId", data.id)
-          this.$store.commit("setWs", createWebSockets(context.getters["token"])) 
+          this.$store.commit("setWs", createWebSockets(this.$store.getters["token"])) 
         }
         else {
           let data = await (await api.quickConnectNoUser(this.connectCode)).data
           let payload = {
             username: data.user.username,
-            password: data0.password,
+            password: data.password,
           }
           await this.$store.dispatch("actionLogIn", payload);
           this.$store.commit("setGameId", data.id)
-          this.$store.commit("setWs", createWebSockets(context.getters["token"])) 
+          this.$store.commit("setWs", createWebSockets(this.$store.getters["token"])) 
         }
       }
     }

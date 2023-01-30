@@ -35,7 +35,6 @@ const routes = [
   {
     path: '/quick_connect/',
     name: 'QuickConnect',
-    beforeEnter: enterGuard,
     component: () => import('@/views/QuickConnectPage.vue')
   },
   {
