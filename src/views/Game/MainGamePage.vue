@@ -110,14 +110,28 @@
           <ion-modal  ref="modalGame" :is-open="gameEnd"  >
             <ion-header>
               <ion-toolbar>
-                  <ion-title>New Round</ion-title>
+                  <ion-title>Game end</ion-title>
                   <ion-buttons slot="end">
                   <ion-button @click="closeModal">Return to main menu</ion-button>
                   </ion-buttons>
               </ion-toolbar>
               </ion-header>
               <ion-content class="ion-padding">
-                  Game ended
+                  <h1 class="center">Game ended</h1>
+              </ion-content>
+          </ion-modal>
+
+          <ion-modal  ref="modalEvents" :is-open="events.length != 0"  >
+            <ion-header>
+              <ion-toolbar>
+                  <ion-title>Event</ion-title>
+                  <ion-buttons slot="end">
+                  <ion-button @click="processEvent">Proceed</ion-button>
+                  </ion-buttons>
+              </ion-toolbar>
+              </ion-header>
+              <ion-content class="ion-padding">
+                  <h2>{{ currentEvent }}</h2>
               </ion-content>
           </ion-modal>
 
@@ -149,6 +163,12 @@ export default  {
     async closeModal() {
       this.$store.commit("newRoundStarted")
       this.$refs.modal.$el.dismiss()
+    },
+    async processEvent() {
+      this.$store.commit("popCurrentEvent")
+      if (this.$store.getters["events"].length == 0) {
+        this.$refs.modalEvents.$el.dismiss()
+      }
     }
   },
   computed: {
@@ -184,6 +204,13 @@ export default  {
     },
     events () {
       return this.$store.getters["events"]
+    },
+    currentEvent() {
+      if (this.$store.getters["events"].length != 0) {
+        return this.$store.getters["events"][0]
+      }
+
+      return null
     },
     roundSummary() {
       return this.$store.getters["roundSummary"]

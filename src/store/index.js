@@ -85,6 +85,9 @@ export default createStore({
       console.log("reseting new lobby")
       state.newLobby = false
     },
+    popCurrentEvent(state) {
+      state.events.shift()
+    },
     newRoundStarted(state) {
       state.newRound = false
     },

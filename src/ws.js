@@ -62,6 +62,7 @@ export const createWebSockets = (token) => {
     else if ( event.GameEventSettingsChange !== undefined ) {
       console.log("event popup", event.GameEventSettingsChange)
       store.commit("setSettings", event.GameEventSettingsChange)
+      store.commit("addEvent", "Settings changed")
     }
     else if ( event.GameEventPopUp !== undefined ) {
       console.log("event popup", event.GameEventPopUp)
@@ -69,7 +70,7 @@ export const createWebSockets = (token) => {
     }
     else if ( event.GameEventResource !== undefined ) {
       console.log("event resource", event.GameEventResource)
-      store.commit("addEvent", event.GameEventResource)
+      store.commit("addEvent", `Resources added: ${event.GameEventPopUp}`)
     }
     else if ( event.UpdateClasses !== undefined ) {
       console.log(event.UpdateClasses)

@@ -119,6 +119,14 @@ export const api = {
 
   async getPlayersStats(token, id) {
     return axios.get(`${APISUFFIX}/lobby/${id}/stats/players/`, authHeaders(token));
+  },
+
+  async quickConnect(token, code) {
+    return axios.put(`${APISUFFIX}/users/quick_connect?connect_code=${code}`, authHeaders(token));
+  },
+
+  async quickConnectNoUser(code) {
+    return axios.put(`${APISUFFIX}/quick_connect?connect_code=${code}`);
   }
 
 
